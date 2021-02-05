@@ -5,9 +5,9 @@ from scipy import stats
 
 seqc_file = sys.argv[1]
 seqc_file2 = sys.argv[2]
-num_needle_files = int(sys.argv[3])
+num_salmon_files = int(sys.argv[3])
 files = []
-for i in range(4, 4+num_needle_files):
+for i in range(4, 4+num_salmon_files):
     files.append(sys.argv[i])
 
 
@@ -50,12 +50,12 @@ with open(seqc_file, 'r') as f:
 
 gene_lengths = {}
 for file in files:
-    needle_values = {}
+    salmon_values = {}
     with open(file, 'r') as f:
         for line in f:
             if line[0] != "N":
                 gene = line.split()[0].split('|')[5]
-                exp_list = [float(x) for x in line.split()[3]]
+                exp_list = [line.split()[3]]
                 length = int(line.split()[1])
                 if gene in salmon_values:
                     salmon_values[gene].append(exp_list[0])
@@ -65,11 +65,11 @@ for file in files:
                     gene_lengths.update({gene:[length]})
 
     seqc = []
-    needle = []
+    salmon = []
     for gene in seqc_values:
-        if gene in needle_values:
-            exps = np.array(needle_values[gene])
-            needle.append(np.mean(exps, axis = 0) ) # Chisana uses + 0.5
+        if gene in salmon_values:
+            exps = np.array(salmon_values[gene])
+            salmon.append(np.mean(exps, axis = 0) ) # Chisana uses + 0.5
             exps2 = np.array(seqc_values[gene][Letter])
             # How Chisanga did it
             #means = [np.mean(exps2, axis = 1)]
@@ -80,20 +80,20 @@ for file in files:
         else:
             miss += 1
 
-    if (stats.pearsonr(seqc, needle)[1] <= 0.003):
-        pearson.append(stats.pearsonr(seqc, needle)[0] )
+    if (stats.pearsonr(seqc, salmon)[1] <= 0.003):
+        pearson.append(stats.pearsonr(seqc, salmon)[0] )
     else:
         pearson.append(0)
-    if (stats.spearmanr(seqc, needle)[1] <= 0.003):
-        spearman.append(stats.spearmanr(seqc, needle)[0] )
+    if (stats.spearmanr(seqc, salmon)[1] <= 0.003):
+        spearman.append(stats.spearmanr(seqc, salmon)[0] )
     else:
         spearman.append(0)
 
-    print (miss, len(seqc), len(needle))
+    print (miss, len(seqc), len(salmon))
     miss = 0
     iterator += 1
     it += 1
-    if (it == 4) & (iterator < num_needle_files):
+    if (it == 4) & (iterator < num_salmon_files):
         Letter = Letters[0]
         Letters = Letters[1:]
         it = 0
