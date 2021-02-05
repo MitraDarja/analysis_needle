@@ -1,0 +1,2 @@
+# Build index
+./src/salmon index -t data/gencode.v36.pc_transcripts.fa.gz -i gencode.v36.index -k 19
