@@ -40,15 +40,16 @@ for file in files:
     salmon_values = {}
     with open(file, 'r') as f:
         for line in f:
-            gene = line.split()[0].split('|')[5]
-            exp_list = [int(x) for x in line.split()[3]]
-            length = int(line.split()[1])
-            if gene in salmon_values:
-                salmon_values[gene].append(exp_list[0])
-                gene_lengths[gene].append(length)
-            else:
-                salmon_values.update({gene:exp_list})
-                gene_lengths.update({gene:[length]})
+            if line[0] != "N":
+                gene = line.split()[0].split('|')[5]
+                exp_list = [int(x) for x in line.split()[3]]
+                length = int(line.split()[1])
+                if gene in salmon_values:
+                    salmon_values[gene].append(exp_list[0])
+                    gene_lengths[gene].append(length)
+                else:
+                    salmon_values.update({gene:exp_list})
+                    gene_lengths.update({gene:[length]})
 
     seqc = []
     salmon = []
