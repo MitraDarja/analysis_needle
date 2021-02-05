@@ -55,7 +55,7 @@ for file in files:
         for line in f:
             if line[0] != "N":
                 gene = line.split()[0].split('|')[5]
-                exp_list = [line.split()[3]]
+                exp_list = [float(line.split()[3])]
                 length = int(line.split()[1])
                 if gene in salmon_values:
                     salmon_values[gene].append(exp_list[0])
