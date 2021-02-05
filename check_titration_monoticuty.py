@@ -23,6 +23,7 @@ Letters = ["B", "C", "D"]
 it = 0
 values = {}
 miss = 0
+gene_count = 0
 
 for i in range(4):
     values.update({i:{}})
@@ -52,6 +53,7 @@ for file in files:
 
 for it in range(4):
     for gene in values[it]:
+        gene_count +=1
         gene_expressions = []
         for l in "ACDB": # Not ABCD, because than it is not in the right order
             exps = np.array(values[it][gene][l])
@@ -60,3 +62,4 @@ for it in range(4):
             miss += 1
 
 print(miss)
+print(gene_count, gene_count/4)
