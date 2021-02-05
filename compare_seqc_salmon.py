@@ -42,7 +42,7 @@ for file in files:
         for line in f:
             if line[0] != "N":
                 gene = line.split()[0].split('|')[5]
-                exp_list = [float(x) for x in line.split()[3]]
+                exp_list = [float(line.split()[3])]
                 length = int(line.split()[1])
                 if gene in salmon_values:
                     salmon_values[gene].append(exp_list[0])
@@ -56,7 +56,7 @@ for file in files:
     for gene in seqc_values:
         if gene in salmon_values:
             exps = np.array(salmon_values[gene])
-            salmon.append(np.means(exps, axis = 0))
+            salmon.append(np.mean(exps, axis = 0))
             exps2 = np.array(seqc_values[gene][Letter])
             seqc.append((np.mean(exps2, axis = 0)[it]))
         else:
