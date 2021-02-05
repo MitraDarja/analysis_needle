@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import sys
 from scipy import stats
@@ -51,6 +52,8 @@ for file in files:
             Letters = Letters[1:]
             it = 0
 
+expected_fold_change_c_d  = []
+fold_change_c_d = []
 for it in range(4):
     for gene in values[it]:
         gene_count +=1
@@ -60,6 +63,15 @@ for it in range(4):
             gene_expressions.append(np.mean(exps, axis = 0))
         if not (all(gene_expressions[j] <= gene_expressions[j + 1] for j in range(len(gene_expressions)-1))  | all(gene_expressions[j] >= gene_expressions[j + 1] for j in range(len(gene_expressions)-1))):
             miss += 1
+        if all(gene_expressions[j] > 0 for j in range(len(gene_expressions))):
+            x = float(gene_expressions[3])/gene_expressions[0]
+            #print(gene_expressions, x)
+            expected_fold_change_c_d.append(np.log2(((3*x)+1)/(x + 3))) # Following equation 1 from Chisanga et al.
+            fold_change_c_d.append(float(gene_expressions[2])/gene_expressions[1]) # Following equation 1 from Chisanga et al.
+
+
 
 print(miss)
 print(gene_count, gene_count/4)
+plt.plot(expected_fold_change_c_d, fold_change_c_d)
+plt.savefig("check_titration_"+str(method)+".png")
