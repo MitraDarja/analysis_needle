@@ -6,9 +6,9 @@ from scipy import stats
 def get_exp_value(line, method):
     if (method == 0):
         return [int(x) for x in line.split()[1:]]
-    else if (method == 1):
+    elif (method == 1):
         return  [float(line.split()[4])]
-    else if (method == 2):
+    elif (method == 2):
         return [float(line.split()[3])]
 
 num_files = int(sys.argv[1])
@@ -25,7 +25,7 @@ values = {}
 miss = 0
 
 for i in range(1,5):
-    values.update({i:{})
+    values.update({i:{}})
 
 
 
@@ -48,12 +48,12 @@ for file in files:
 
 
 for it in range(1,5):
-    for gene in values[it][l]:
+    for gene in values[it]:
         gene_expressions = []
         for l in "ACDB": # Not ABCD, because than it is not in the right order
             exps = np.array(values[it][gene][l])
             gene_expressions.append(np.mean(exps, axis = 0))
-        if !(all(gene_expressions[j] <= gene_expressions[j + 1] for j in range(len(gene_expressions)-1)) || all(gene_expressions[j] >= gene_expressions[j + 1] for j in range(len(gene_expressions)-1))):
+        if (!(all([gene_expressions[j] <= gene_expressions[j + 1] for j in range(len(gene_expressions)-1)]) )):#| all(gene_expressions[j] >= gene_expressions[j + 1] for j in range(len(gene_expressions)-1)))):
             miss += 1
 
 print(miss)
