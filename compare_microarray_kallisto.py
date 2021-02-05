@@ -24,8 +24,8 @@ with open(seqc_file2, 'r') as f:
     for line in f:
         #print(line)
         if line[0] != "q":
-            line_table = line.split(',')
-            gene = line_table[3]
+            line_table = line.split()
+            gene = line_table[1]
             if gene not in gene_ids:
                 gene_ids.update({line_table[0]:gene})
 
