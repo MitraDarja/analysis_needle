@@ -1,0 +1,5 @@
+# Build index
+./kallisto index -k 19 -i gencode.v36.index data/gencode.v36.pc_transcripts.fa.gz
+
+# Quantify
+./kallisto quant -i gencode.v36.index -o seqc_results/ ../Chisanga_data/fqs/SEQC2012-ILM-AGR-* -g ../data/gencode.v36.annotation.gtf
