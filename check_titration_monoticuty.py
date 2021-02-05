@@ -30,6 +30,8 @@ for i in range(4):
 for file in files:
     with open(file, 'r') as f:
         for line in f:
+            if (line[0] == "N") | (line[0] == "t"):
+                continue
             gene =  line.split()[0].split('|')[5]
             exp_list = get_exp_value(line, method)
             length = int(line.split('|')[6])
