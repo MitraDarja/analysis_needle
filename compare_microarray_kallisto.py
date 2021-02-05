@@ -55,7 +55,7 @@ for file in files:
         for line in f:
             if line[0] != "t":
                 gene = line.split()[0].split('|')[5]
-                exp_list = [float(x) for x in line.split()[4]]
+                exp_list = [float(line.split()[4])]
                 length = int(line.split()[1])
                 if gene in kallisto_values:
                     kallisto_values[gene].append(exp_list[0])
