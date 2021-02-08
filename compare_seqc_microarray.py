@@ -103,9 +103,12 @@ for file in files:
     for gene in seqc_values:
         if gene in values:
             exps = np.array(values[gene])
-            expressions.append(np.mean(exps, axis = 0))
-            exps2 = np.array(seqc_values[gene][Letter])
-            seqc.append((np.mean(exps2, axis = 0)[it]))
+            if len(exps) == 1:
+                expressions.append(np.mean(exps, axis = 0))
+                exps2 = np.array(seqc_values[gene][Letter])
+                seqc.append((np.mean(exps2, axis = 0)[it]))
+            else:
+                miss +=1
         else:
             miss += 1
 
