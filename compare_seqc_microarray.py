@@ -59,19 +59,21 @@ with open(seqc_file, 'r') as f:
         if line[0] != "E":
             line_table = line.split()
             if microrray:
-                gene =  gene_ids[line_table[0]]
+                 if line_table[0] in gene_ids:
+                     gene =  gene_ids[line_table[0]]
+                     exp_list_A = [float(x) for x in [line_table[5], line_table[9], line_table[13], line_table[17]]]
+                     exp_list_B = [float(x) for x in [line_table[6], line_table[10], line_table[14], line_table[18]]]
+                     exp_list_C = [float(x) for x in [line_table[7], line_table[11], line_table[15], line_table[19]]]
+                     exp_list_D = [float(x) for x in [line_table[8], line_table[12], line_table[16], line_table[20]]]
+                 else:
+                    continue
             else:
                 gene = line_table[1]
-            if microrray:
-                exp_list_A = [float(x) for x in [line_table[5], line_table[9], line_table[13], line_table[17]]]
-                exp_list_B = [float(x) for x in [line_table[6], line_table[10], line_table[14], line_table[18]]]
-                exp_list_C = [float(x) for x in [line_table[7], line_table[11], line_table[15], line_table[19]]]
-                exp_list_D = [float(x) for x in [line_table[8], line_table[12], line_table[16], line_table[20]]]
-            else:
                 exp_list_A = [float(x) for x in [line_table[2], line_table[4], line_table[6], line_table[8]]]
                 exp_list_B = [float(x) for x in [line_table[10], line_table[12], line_table[14], line_table[16]]]
                 exp_list_C = [float(x) for x in [line_table[18], line_table[20], line_table[22], line_table[24]]]
                 exp_list_D = [float(x) for x in [line_table[26], line_table[28], line_table[30], line_table[32]]]
+
             if gene not in seqc_values:
                 dict = {"A": [exp_list_A], "B": [exp_list_B], "C": [exp_list_C],"D": [exp_list_D] }
                 seqc_values.update({gene: dict})
