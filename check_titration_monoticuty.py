@@ -73,19 +73,20 @@ for it in range(4):
     for gene in values[it]:
         gene_count +=1
         gene_expressions = []
-        for l in "ACDB": # Not ABCD, because than it is not in the right order
-            exps = np.array(values[it][gene][l])
-            if method == 0:
-                gene_expressions.append(np.mean(exps, axis = 0)/np.mean(norm_all[it][l],axis=0))
-            else:
-                gene_expressions.append(np.mean(exps, axis = 0))
-        if not (all(gene_expressions[j] <= gene_expressions[j + 1] for j in range(len(gene_expressions)-1))  | all(gene_expressions[j] >= gene_expressions[j + 1] for j in range(len(gene_expressions)-1))):
-            miss += 1
-        if all(gene_expressions[j] > 0 for j in range(len(gene_expressions))):
-            x = float(gene_expressions[3])/gene_expressions[0]
-            #print(gene_expressions, x)
-            expected_fold_change_c_d.append(np.log2(((3*x)+1)/(x + 3))) # Following equation 1 from Chisanga et al.
-            fold_change_c_d.append(float(gene_expressions[2])/gene_expressions[1]) # Following equation 1 from Chisanga et al.
+        if len(values[it][gene][l]) == 1:
+            for l in "ACDB": # Not ABCD, because than it is not in the right order
+                exps = np.array(values[it][gene][l])
+                if method == 0:
+                    gene_expressions.append(np.mean(exps, axis = 0)/np.mean(norm_all[it][l],axis=0))
+                else:
+                    gene_expressions.append(np.mean(exps, axis = 0))
+            if not (all(gene_expressions[j] <= gene_expressions[j + 1] for j in range(len(gene_expressions)-1))  | all(gene_expressions[j] >= gene_expressions[j + 1] for j in range(len(gene_expressions)-1))):
+                miss += 1
+            if all(gene_expressions[j] > 0 for j in range(len(gene_expressions))):
+                x = float(gene_expressions[3])/gene_expressions[0]
+                #print(gene_expressions, x)
+                expected_fold_change_c_d.append(np.log2(((3*x)+1)/(x + 3))) # Following equation 1 from Chisanga et al.
+                fold_change_c_d.append(float(gene_expressions[2])/gene_expressions[1]) # Following equation 1 from Chisanga et al.
 
 
 
