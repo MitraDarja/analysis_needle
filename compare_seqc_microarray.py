@@ -1,6 +1,6 @@
 # Use:
 # seqc: python3 compare_seqc_microarray.py method(0, 1, 2 for needle count, kallisto or salmon) 0 secq_expression num_files data
-# microrray: python3 compare_seqc_microarray.py method(0, 1, 2 for needle count, kallisto or salmon) 1 secq_expression file with entred2gene_id_info num_files data 
+# microrray: python3 compare_seqc_microarray.py method(0, 1, 2 for needle count, kallisto or salmon) 1 secq_expression file with entred2gene_id_info num_files data
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -80,7 +80,7 @@ for file in files:
     values = {}
     with open(file, 'r') as f:
         for line in f:
-            if line[0] != "t":
+            if (line[0] != "t") | line[0] != "N":
                 gene = line.split()[0].split('|')[5]
                 exp_list = get_exp_value(line, method)
                 length = int(line.split()[1])
