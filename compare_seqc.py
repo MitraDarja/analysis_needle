@@ -1,12 +1,22 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import sys
 from scipy import stats
 
 
-seqc_file = sys.argv[1]
-num_salmon_files = int(sys.argv[2])
+def get_exp_value(line, method):
+    if (method == 0):
+        return [int(x) for x in line.split()[1:]]
+    elif (method == 1):
+        return  [float(line.split()[4])]
+    elif (method == 2):
+        return [float(line.split()[3])]
+
+method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon
+seqc_file = sys.argv[2]
+num_files = int(sys.argv[3])
 files = []
-for i in range(3, 3+num_salmon_files):
+for i in range(4, 4+num_files):
     files.append(sys.argv[i])
 
 seqc_values = {}
@@ -37,45 +47,45 @@ with open(seqc_file, 'r') as f:
 
 gene_lengths = {}
 for file in files:
-    salmon_values = {}
+    values = {}
     with open(file, 'r') as f:
         for line in f:
-            if line[0] != "N":
+            if line[0] != "t":
                 gene = line.split()[0].split('|')[5]
-                exp_list = [float(line.split()[3])]
+                exp_list = get_exp_value(line, method)
                 length = int(line.split()[1])
-                if gene in salmon_values:
-                    salmon_values[gene].append(exp_list[0])
+                if gene in values:
+                    values[gene].append(exp_list[0])
                     gene_lengths[gene].append(length)
                 else:
-                    salmon_values.update({gene:exp_list})
+                    values.update({gene:exp_list})
                     gene_lengths.update({gene:[length]})
 
     seqc = []
-    salmon = []
+    expressions = []
     for gene in seqc_values:
-        if gene in salmon_values:
-            exps = np.array(salmon_values[gene])
-            salmon.append(np.mean(exps, axis = 0))
+        if gene in values:
+            exps = np.array(values[gene])
+            expressions.append(np.mean(exps, axis = 0))
             exps2 = np.array(seqc_values[gene][Letter])
             seqc.append((np.mean(exps2, axis = 0)[it]))
         else:
             miss += 1
 
-    if (stats.pearsonr(seqc, salmon)[1] <= 0.003):
-        pearson.append(stats.pearsonr(seqc, salmon)[0] )
+    if (stats.pearsonr(seqc, expressions)[1] <= 0.003):
+        pearson.append(stats.pearsonr(seqc, expressions)[0] )
     else:
         pearson.append(0)
-    if (stats.spearmanr(seqc, salmon)[1] <= 0.003):
-        spearman.append(stats.spearmanr(seqc, salmon)[0] )
+    if (stats.spearmanr(seqc, expressions)[1] <= 0.003):
+        spearman.append(stats.spearmanr(seqc, expressions)[0] )
     else:
         spearman.append(0)
 
-    print (miss, len(seqc), len(salmon))
+    print (miss, len(seqc), len(expressions))
     miss = 0
     iterator += 1
     it += 1
-    if (it == 4) & (iterator < num_salmon_files):
+    if (it == 4) & (iterator < num_files):
         Letter = Letters[0]
         Letters = Letters[1:]
         it = 0
