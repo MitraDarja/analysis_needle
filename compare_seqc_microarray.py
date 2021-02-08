@@ -80,6 +80,7 @@ for file in files:
     values = {}
     with open(file, 'r') as f:
         for line in f:
+            print(line)
             if (line[0] != "t") | (line[0] != "N"):
                 gene = line.split()[0].split('|')[5]
                 exp_list = get_exp_value(line, method)
