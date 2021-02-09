@@ -68,12 +68,14 @@ for it in range(4):
             norm_all[it][l] += np.mean(exps, axis = 0)/np.mean(gene_lengths[gene])
 
 expected_fold_change_c_d  = []
+fold_change_a_b = []
 fold_change_c_d = []
+error = []
 for it in range(4):
     for gene in values[it]:
-        gene_count +=1
         gene_expressions = []
-        if len(values[it][gene][l]) == 1:
+        if len(values[it][gene][l]) > 0:
+            gene_count +=1
             for l in "ACDB": # Not ABCD, because than it is not in the right order
                 exps = np.array(values[it][gene][l])
                 if method == 0:
@@ -83,14 +85,23 @@ for it in range(4):
             if not (all(gene_expressions[j] <= gene_expressions[j + 1] for j in range(len(gene_expressions)-1))  | all(gene_expressions[j] >= gene_expressions[j + 1] for j in range(len(gene_expressions)-1))):
                 miss += 1
             if all(gene_expressions[j] > 0 for j in range(len(gene_expressions))):
-                x = float(gene_expressions[3])/gene_expressions[0]
+                #x = float(gene_expressions[3])/gene_expressions[0]
+                #print(np.power(2,x))
+                #x = np.power(2,x)
                 #print(gene_expressions, x)
-                expected_fold_change_c_d.append(np.log2(((3*x)+1)/(x + 3))) # Following equation 1 from Chisanga et al.
-                fold_change_c_d.append(float(gene_expressions[2])/gene_expressions[1]) # Following equation 1 from Chisanga et al.
+                #expected_fold_change_c_d.append(np.log2((3*x)+1) - np.log2(x + 3)) # Following equation 1 from Chisanga et al.
+                #fold_change_c_d.append(np.log2(float(gene_expressions[2])/gene_expressions[1])) # Following equation 1 from Chisanga et al.
+                #error.append((expected_fold_change_c_d[-1]-fold_change_c_d[-1])* (expected_fold_change_c_d[-1]-fold_change_c_d[-1]))
+                expected_fold_change_c_d.append(np.log2(float(gene_expressions[0] + (3*gene_expressions[3]))/((gene_expressions[3] + (3*gene_expressions[0]))))) # A+3B/3A+B = B/A
+                fold_change_a_b.append(np.log2(float(gene_expressions[3])/gene_expressions[0]))
+                fold_change_c_d.append(np.log2(float(gene_expressions[2])/gene_expressions[1]))
+                error.append((expected_fold_change_c_d[-1]-fold_change_c_d[-1])* (expected_fold_change_c_d[-1]-fold_change_c_d[-1]))
 
 
 
 print(miss)
-print(gene_count, gene_count/4)
-plt.plot(expected_fold_change_c_d, fold_change_c_d)
+print(gene_count)
+print(np.mean(error), len(error))
+#plt.plot(expected_fold_change_c_d, color="red")
+plt.plot(fold_change_a_b, fold_change_c_d, 'o', color = "black")
 plt.savefig("check_titration_"+str(method)+".png")
