@@ -1,0 +1,59 @@
+# Use:
+# seqc: python3 compare_simulated.py method(0, 1, 2 for needle count, kallisto or salmon) secq_expression num_files data
+
+import numpy as np
+import sys
+from scipy import stats
+
+
+def get_exp_value(line, method):
+    if (method == 0):
+        return int(x) for x in line.split()[1:]
+    elif (method == 1):
+        return  float(line.split()[4])
+    elif (method == 2):
+        return float(line.split()[3])
+
+method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon
+j = 3
+dir = sys.argv[j]
+num_files = int(sys.argv[j+1])
+files = []
+for i in range(j+2, j+2+num_files):
+    files.append(sys.argv[i])
+
+mse = []
+for i in range(0, len(files), 2):
+    values_1 = {}
+    values_2 = {}
+    expected_values = {}
+    errors = []
+    with open(dir + "Test_"+str(i)+".tsv", 'r') as f:
+        for line in f:
+            if line[0] != "t":
+                transcript = line.split()[0].split('|')[0]
+                fold_change = float(line.split()[1])
+                expected_values.update({transcript:fold_change})
+
+    with open(files[i], 'r') as f:
+        for line in f:
+            if (line[0] != "t") & (line[0] != "N"):
+                transcript = line.split()[0].split('|')[0]
+                exp_list = get_exp_value(line, method)
+                values_1.update({transcript:exp_list})
+    with open(files[i+1], 'r') as f:
+        for line in f:
+            if (line[0] != "t") & (line[0] != "N"):
+                transcript = line.split()[0].split('|')[0]
+                exp_list = get_exp_value(line, method)
+                values_2.update({transcript:exp_list})
+
+    for transcript in expected_values:
+        if (transcript in values_1) & (transcript in values_2):
+            fold_change = values_1[transcript]/values_2[transcript]
+            errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
+    mean_square_error = np.mean(errors)
+    mse.append(mean_square_error)
+
+print(mse)
+print(np.mean(mse), np.var(mse))
