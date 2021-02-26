@@ -28,7 +28,7 @@ for i in range(0, len(files), 2):
     values_2 = {}
     expected_values = {}
     errors = []
-    with open(dir + "Test_"+str(i)+".tsv", 'r') as f:
+    with open(dir + "Test_"+str(i+1)+".tsv", 'r') as f:
         for line in f:
             if line[0] != "t":
                 transcript = line.split()[0].split('|')[0]
@@ -52,7 +52,7 @@ for i in range(0, len(files), 2):
 
     for transcript in expected_values:
         if (transcript in values_1) & (transcript in values_2):
-            fold_change = values_1[transcript]/values_2[transcript]
+            fold_change = (values_1[transcript] +0.1)/(values_2[transcript]+0.1)
             errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
