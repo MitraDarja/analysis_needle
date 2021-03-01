@@ -5,7 +5,7 @@ import numpy as np
 import sys
 from scipy import stats
 
-
+# Here it should have an impact that there is a normalization in kallisto and salmon, when using TPM, while needle does not correct for amount, but it is known that coverage is the same in the simulated files
 def get_exp_value(line, method):
     if (method == 0):
         return [int(x) for x in line.split()[1:]][0]
@@ -58,13 +58,13 @@ for i in range(0, len(files), 2):
 
     for transcript in expected_values:
         if (transcript in values_1) & (transcript in values_2):
-            fold_change = (values_1[transcript] +0.1)/(values_2[transcript]+0.1)
+            fold_change = (values_1[transcript] + 1)/(values_2[transcript]+ 1) # Log2 drastically improves results of kallisto and salmon, but why?
             errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
 
     for transcript in values_1:
-        if (values_1[transcript] +0.1)/(values_2[transcript]+0.1) > 0.15:
+        if max((values_1[transcript] + 1)/(values_2[transcript]+ 1), (values_2[transcript] + 1)/(values_1[transcript]+ 1)) > 1.15:
             if transcript in expected_values:
                 tp += 1
             else:
