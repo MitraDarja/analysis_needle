@@ -23,11 +23,17 @@ for i in range(j+2, j+2+num_files):
     files.append(sys.argv[i])
 
 mse = []
+fpr = []
+fnr = []
 for i in range(0, len(files), 2):
     values_1 = {}
     values_2 = {}
     expected_values = {}
     errors = []
+    tp = 0
+    tn = 0
+    fp = 0
+    fn = 0
     with open(dir + "Test_"+str(i+1)+".tsv", 'r') as f:
         for line in f:
             if line[0] != "t":
@@ -57,5 +63,23 @@ for i in range(0, len(files), 2):
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
 
-print(mse)
+    for transcript in values1:
+        if (values_1[transcript] +0.1)/(values_2[transcript]+0.1) > 0.15:
+            if transcript in expected_values:
+                tp += 1
+            else:
+                fn += 1
+        else:
+            if transcript in expected_values:
+                fp += 1
+            else:
+                tn += 1
+    fpr.append(float(fp)/(fp+tn))
+    fnr.append(float(fn)/(fn+tp))
+
+print("Mean Squared error":\n", mse)
 print(np.mean(mse), np.var(mse))
+print("False positive rate:\n", fpr)
+print(np.mean(fpr), np.var(fpr))
+print("False negatiive rate:\n", fnr)
+print(np.mean(fnr), np.var(fnr))
