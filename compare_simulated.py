@@ -63,21 +63,21 @@ for i in range(0, len(files), 2):
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
 
-    for transcript in values1:
+    for transcript in values_1:
         if (values_1[transcript] +0.1)/(values_2[transcript]+0.1) > 0.15:
             if transcript in expected_values:
                 tp += 1
             else:
-                fn += 1
+                fp += 1
         else:
             if transcript in expected_values:
-                fp += 1
+                fn += 1
             else:
                 tn += 1
     fpr.append(float(fp)/(fp+tn))
     fnr.append(float(fn)/(fn+tp))
 
-print("Mean Squared error":\n", mse)
+print("Mean Squared error:\n", mse)
 print(np.mean(mse), np.var(mse))
 print("False positive rate:\n", fpr)
 print(np.mean(fpr), np.var(fpr))
