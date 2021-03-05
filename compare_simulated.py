@@ -13,9 +13,9 @@ def get_exp_value(line, method):
     if (method == 0):
         return [int(x) for x in line.split()[1:]][0]
     elif (method == 1):
-        return  float(line.split()[4])
+        return  float(line.split()[3])
     elif (method == 2):
-        return float(line.split()[3])
+        return float(line.split()[4])
 
 method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon
 j = 2
@@ -31,6 +31,8 @@ for i in range(0, len(files), 2):
     values_2 = {}
     expected_values = {}
     errors = []
+    per_million_1 = 0
+    per_million_2 = 0
     with open(dir + "Test_"+str(i+1)+".tsv", 'r') as f:
         for line in f:
             if line[0] != "t":
@@ -43,7 +45,9 @@ for i in range(0, len(files), 2):
             if (line[0] != "t") & (line[0] != "N"):
                 transcript = line.split()[0].split('|')[0]
                 exp_list = get_exp_value(line, method)
-                values_1.update({transcript:exp_list})
+                length = int(line.split()[0].split('|')[6])
+                values_1.update({transcript:exp_list/length})
+                per_million_1 += exp_list/length
 
 
     with open(files[i+1], 'r') as f:
@@ -51,10 +55,15 @@ for i in range(0, len(files), 2):
             if (line[0] != "t") & (line[0] != "N"):
                 transcript = line.split()[0].split('|')[0]
                 exp_list = get_exp_value(line, method)
-                values_2.update({transcript:exp_list})
+                values_2.update({transcript:exp_list/length})
+                per_million_2 += exp_list/length
 
+    per_million_1 = per_million_1/1,000,000.0
+    per_million_2 = per_million_2/1,000,000.0
     for transcript in expected_values:
         if (transcript in values_1) & (transcript in values_2):
+            values_1[transcript] = values_1[transcript]/per_million_1
+            values_2[transcript] = values_2[transcript]/per_million_2
             fold_change = (values_1[transcript] + 1)/(values_2[transcript]+ 1) # Log2 drastically improves results of kallisto and salmon, but why?
             errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
     mean_square_error = np.mean(errors)
