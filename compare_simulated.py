@@ -63,8 +63,8 @@ for i in range(0, len(files), 2):
                 values_2.update({transcript:exp_list/length})
                 per_million_2 += exp_list/length
 
-    per_million_1 = per_million_1/1,000,000.0
-    per_million_2 = per_million_2/1,000,000.0
+    per_million_1 = per_million_1/1000000.0
+    per_million_2 = per_million_2/1000000.0
     for transcript in expected_values:
         if (transcript in values_1) & (transcript in values_2):
             values_1[transcript] = values_1[transcript]/per_million_1
