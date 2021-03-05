@@ -1,8 +1,8 @@
 # Use:
 # seqc: python3 compare_simulated.py method(0, 1, 2 for needle count, kallisto or salmon) secq_expression num_files data
-# python3 compare_simulated.py 0 data/ 20 $(ls -v analysis_needle_simulation/Test_*)
-# python3 compare_simulated.py 1 data/ 20 $(ls -v ../kallisto/Test-*/abundance.tsv)
-# python3 compare_simulated.py 2 data/ 20 $(ls -v ../salmon-1.4.0/build/out/Test_*.out/quant.sf)
+# python3 compare_simulated.py 0 data/ 40 $(ls -v analysis_needle_simulation/Test_*)
+# python3 compare_simulated.py 1 data/ 40 $(ls -v ../kallisto/Test-*/abundance.tsv)
+# python3 compare_simulated.py 2 data/ 40 $(ls -v ../salmon-1.4.0/build/out/Test_*.out/quant.sf)
 
 import numpy as np
 import sys
@@ -34,7 +34,8 @@ for i in range(0, len(files), 2):
     errors = []
     per_million_1 = 0
     per_million_2 = 0
-    count = 0
+    max = 0
+    max_transcript = ""
     with open(dir + "Test_"+str(files_no)+".tsv", 'r') as f:
         for line in f:
             if line[0] != "t":
@@ -68,16 +69,18 @@ for i in range(0, len(files), 2):
         per_million_2 = 1
     for transcript in expected_values:
         if (transcript in values_1) & (transcript in values_2):
-            count +=1
             values_1[transcript] = values_1[transcript]/per_million_1
             values_2[transcript] = values_2[transcript]/per_million_2
             fold_change = (values_1[transcript] + 1)/(values_2[transcript]+ 1) # Log2 drastically improves results of kallisto and salmon, but why?
             errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
+            if ((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])) > max:
+                max = (fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])
+                max_transcript = transcript
         else:
             errors.append((1-expected_values[transcript]) * (1-expected_values[transcript]))
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
-    print(i, files[i], files[i+1],count)
+    print(max, max_transcript)
 
 
 print("Mean Squared error:\n", mse)
