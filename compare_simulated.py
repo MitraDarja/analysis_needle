@@ -26,6 +26,7 @@ for i in range(j+2, j+2+num_files):
     files.append(sys.argv[i])
 
 mse = []
+files_no = 1
 for i in range(0, len(files), 2):
     values_1 = {}
     values_2 = {}
@@ -34,12 +35,13 @@ for i in range(0, len(files), 2):
     per_million_1 = 0
     per_million_2 = 0
     count = 0
-    with open(dir + "Test_"+str(i+1)+".tsv", 'r') as f:
+    with open(dir + "Test_"+str(files_no)+".tsv", 'r') as f:
         for line in f:
             if line[0] != "t":
                 transcript = line.split()[0].split('|')[0]
                 fold_change = float(line.split()[1])
                 expected_values.update({transcript:fold_change})
+    files_no +=1
 
     with open(files[i], 'r') as f:
         for line in f:
@@ -75,7 +77,7 @@ for i in range(0, len(files), 2):
             print(transcript, (transcript in values_1), (transcript in values_2))
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
-    print(count)
+    print(i, files[i], files[i+1],count)
 
 
 print("Mean Squared error:\n", mse)
