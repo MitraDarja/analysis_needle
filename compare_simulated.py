@@ -79,6 +79,8 @@ for i in range(0, len(files), 2):
                 if ((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])) > max:
                     max = (fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])
                     max_transcript = transcript
+            else: # If one transcript is not found at all, take the expected fold change as error
+                errors.append(expected_values[transcript] * expected_values[transcript])
         else:
             errors.append((1-expected_values[transcript]) * (1-expected_values[transcript]))
     mean_square_error = np.mean(errors)
