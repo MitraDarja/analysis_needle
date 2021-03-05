@@ -71,6 +71,8 @@ for i in range(0, len(files), 2):
             values_2[transcript] = values_2[transcript]/per_million_2
             fold_change = (values_1[transcript] + 1)/(values_2[transcript]+ 1) # Log2 drastically improves results of kallisto and salmon, but why?
             errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
+        else:
+            print(transcript, (transcript in values_1), (transcript in values_2))
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
     print(count)
