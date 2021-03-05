@@ -1,5 +1,8 @@
 # Use:
 # seqc: python3 compare_simulated.py method(0, 1, 2 for needle count, kallisto or salmon) secq_expression num_files data
+# python3 compare_simulated.py 0 data/ 20 $(ls -v analysis_needle_simulation/Test_*)
+# python3 compare_simulated.py 1 data/ 20 $(ls -v ../kallisto/Test-*/abundance.tsv)
+# python3 compare_simulated.py 2 data/ 20 $(ls -v ../salmon-1.4.0/build/out/Test_*.out/quant.sf)
 
 import numpy as np
 import sys
@@ -23,17 +26,11 @@ for i in range(j+2, j+2+num_files):
     files.append(sys.argv[i])
 
 mse = []
-fpr = []
-fnr = []
 for i in range(0, len(files), 2):
     values_1 = {}
     values_2 = {}
     expected_values = {}
     errors = []
-    tp = 0
-    tn = 0
-    fp = 0
-    fn = 0
     with open(dir + "Test_"+str(i+1)+".tsv", 'r') as f:
         for line in f:
             if line[0] != "t":
@@ -63,23 +60,6 @@ for i in range(0, len(files), 2):
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
 
-    for transcript in values_1:
-        if max((values_1[transcript] + 1)/(values_2[transcript]+ 1), (values_2[transcript] + 1)/(values_1[transcript]+ 1)) > 1.15:
-            if transcript in expected_values:
-                tp += 1
-            else:
-                fp += 1
-        else:
-            if transcript in expected_values:
-                fn += 1
-            else:
-                tn += 1
-    fpr.append(float(fp)/(fp+tn))
-    fnr.append(float(fn)/(fn+tp))
 
 print("Mean Squared error:\n", mse)
 print(np.mean(mse), np.var(mse))
-print("False positive rate:\n", fpr)
-print(np.mean(fpr), np.var(fpr))
-print("False negatiive rate:\n", fnr)
-print(np.mean(fnr), np.var(fnr))
