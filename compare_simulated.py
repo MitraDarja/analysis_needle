@@ -15,7 +15,7 @@ def get_exp_value(line, method):
     elif (method == 1):
         return  float(line.split()[3])
     elif (method == 2):
-        return float(line.split()[4])
+        return float(line.split()[3])
 
 method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon
 j = 2
@@ -45,11 +45,8 @@ for i in range(0, len(files), 2):
             if (line[0] != "t") & (line[0] != "N"):
                 transcript = line.split()[0].split('|')[0]
                 exp_list = get_exp_value(line, method)
-                length = int(line.split()[0].split('|')[6])
-                if (method == 0): # needle has already a length correction
-                    length = 1
-                values_1.update({transcript:exp_list/length})
-                per_million_1 += exp_list/length
+                values_1.update({transcript:exp_list})
+                per_million_1 += exp_list
 
 
     with open(files[i+1], 'r') as f:
@@ -57,14 +54,16 @@ for i in range(0, len(files), 2):
             if (line[0] != "t") & (line[0] != "N"):
                 transcript = line.split()[0].split('|')[0]
                 exp_list = get_exp_value(line, method)
-                length = int(line.split()[0].split('|')[6])
-                if (method == 0): # needle has already a length correction
-                    length = 1
-                values_2.update({transcript:exp_list/length})
-                per_million_2 += exp_list/length
+                values_2.update({transcript:exp_list})
+                per_million_2 += exp_list
 
-    per_million_1 = per_million_1/1000000.0
-    per_million_2 = per_million_2/1000000.0
+    if (method == 0):
+        per_million_1 = per_million_1/1000000.0
+        per_million_2 = per_million_2/1000000.0
+    else:
+        per_million_1 = 1
+        per_million_2 = 1
+    print(len(values_1), values_2)
     for transcript in expected_values:
         if (transcript in values_1) & (transcript in values_2):
             values_1[transcript] = values_1[transcript]/per_million_1
