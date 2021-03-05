@@ -5,7 +5,7 @@ library("polyester")
 # Script to create the simulated data set
 
 # Data are the proteincoding transcript sequences from https://www.gencodegenes.org/human/
-fastapath = "data/gencode.v36.pc_transcripts.fa.gz"
+fastapath = "data/gencode.v36.pc_transcripts_k_23.fa.gz"
 
 fastafile = system.file('extdata', fastapath, package='polyester')
 fasta = readDNAStringSet(fastapath)
@@ -37,4 +37,5 @@ for (j in (1:trials)) {
                       fold_changes=fold_changes, seed=142, readlen = bp_length, paired = TRUE, gzip = TRUE)
 
   fasta = readDNAStringSet(fastapath)
+  print(j)
 }
