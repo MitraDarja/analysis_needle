@@ -13,7 +13,7 @@ def get_exp_value(line, method):
     if (method == 0):
         return [int(x) for x in line.split()[1:]][0]
     elif (method == 1):
-        return  float(line.split()[3])
+        return  float(line.split()[4])
     elif (method == 2):
         return float(line.split()[3])
 
@@ -33,6 +33,7 @@ for i in range(0, len(files), 2):
     errors = []
     per_million_1 = 0
     per_million_2 = 0
+    count = 0
     with open(dir + "Test_"+str(i+1)+".tsv", 'r') as f:
         for line in f:
             if line[0] != "t":
@@ -63,15 +64,16 @@ for i in range(0, len(files), 2):
     else:
         per_million_1 = 1
         per_million_2 = 1
-    print(len(values_1), values_2)
     for transcript in expected_values:
         if (transcript in values_1) & (transcript in values_2):
+            count +=1
             values_1[transcript] = values_1[transcript]/per_million_1
             values_2[transcript] = values_2[transcript]/per_million_2
             fold_change = (values_1[transcript] + 1)/(values_2[transcript]+ 1) # Log2 drastically improves results of kallisto and salmon, but why?
             errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
+    print(count)
 
 
 print("Mean Squared error:\n", mse)
