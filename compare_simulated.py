@@ -46,6 +46,8 @@ for i in range(0, len(files), 2):
                 transcript = line.split()[0].split('|')[0]
                 exp_list = get_exp_value(line, method)
                 length = int(line.split()[0].split('|')[6])
+                if (method == 0): # needle has already a length correction
+                    length = 1
                 values_1.update({transcript:exp_list/length})
                 per_million_1 += exp_list/length
 
@@ -55,6 +57,9 @@ for i in range(0, len(files), 2):
             if (line[0] != "t") & (line[0] != "N"):
                 transcript = line.split()[0].split('|')[0]
                 exp_list = get_exp_value(line, method)
+                length = int(line.split()[0].split('|')[6])
+                if (method == 0): # needle has already a length correction
+                    length = 1
                 values_2.update({transcript:exp_list/length})
                 per_million_2 += exp_list/length
 
