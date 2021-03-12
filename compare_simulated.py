@@ -81,11 +81,13 @@ for i in range(0, len(files), 2):
                     max_transcript = transcript
             else: # If one transcript is not found at all, take the expected fold change as error
                 errors.append(expected_values[transcript] * expected_values[transcript])
+                #print(transcript)
         else:
+            print(i, transcript)
             errors.append((1-expected_values[transcript]) * (1-expected_values[transcript]))
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
-    print(max, max_transcript, count)
+    #print(max, max_transcript, count)
 
 
 print("Mean Squared error:\n", mse)
