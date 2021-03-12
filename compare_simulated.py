@@ -1,6 +1,6 @@
 # Use:
 # seqc: python3 compare_simulated.py method(0, 1, 2 for needle count, kallisto or salmon) secq_expression num_files data
-# python3 compare_simulated.py 0 data/ 40 $(ls -v analysis_needle_simulation/Test_*)
+# python3 compare_simulated.py 0 data/ 40 $(ls -v analysis_needle_simulation/Test_*.out)
 # python3 compare_simulated.py 1 data/ 40 $(ls -v ../kallisto/Test-*/abundance.tsv)
 # python3 compare_simulated.py 2 data/ 40 $(ls -v ../salmon-1.4.0/build/out/Test_*.out/quant.sf)
 
@@ -8,14 +8,17 @@ import numpy as np
 import sys
 from scipy import stats
 
-# Here it should have an impact that there is a normalization in kallisto and salmon, when using TPM, while needle does not correct for amount, but it is known that coverage is the same in the simulated files
+# Here two experiments are compared, so a normalization like TPM should be used. kallisto and salmon provide a TPM
+# normalization and return the TPM value for every transcript, but the transcript file provided contained more
+# transcript than we will check during one comparison, therefore for kallisto and salmon not the TPM value is considered
+# but the estimated counts. A TPM-normalization is done for all three methods later in this script.
 def get_exp_value(line, method):
     if (method == 0):
         return [int(x) for x in line.split()[1:]][0]
     elif (method == 1):
-        return  float(line.split()[4])
+        return  float(line.split()[3])
     elif (method == 2):
-        return float(line.split()[3])
+        return float(line.split()[4])
 
 method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon
 j = 2
@@ -62,29 +65,33 @@ for i in range(0, len(files), 2):
                 values_2.update({transcript:exp_list})
                 per_million_2 += exp_list
 
-    if (method == 0):
-        per_million_1 = per_million_1/1000000.0
-        per_million_2 = per_million_2/1000000.0
-    else:
-        per_million_1 = 1
-        per_million_2 = 1
+    # TPM factor for both files
+    per_million_1 = per_million_1/1000000.0
+    per_million_2 = per_million_2/1000000.0
     for transcript in expected_values:
         if (transcript in values_1) & (transcript in values_2):
-            if (values_1[transcript] > 0) & (values_2[transcript] > 0):
-                values_1[transcript] = values_1[transcript]/per_million_1
-                values_2[transcript] = values_2[transcript]/per_million_2
-                fold_change = (values_1[transcript] + 1)/(values_2[transcript]+ 1) # Log2 drastically improves results of kallisto and salmon, but why?
-                errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
-                count +=1
-                if ((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])) > max:
-                    max = (fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])
-                    max_transcript = transcript
-            else: # If one transcript is not found at all, take the expected fold change as error
-                errors.append(expected_values[transcript] * expected_values[transcript])
-                #print(transcript)
+            # Rounding of values for kallisto, which has sometimes really small values, which lead to
+            # nonsensical fold changes, because there are unreasonably large
+            values_1[transcript] = round(values_1[transcript], 2)/per_million_1
+            values_2[transcript] = round(values_2[transcript], 2)/per_million_2
+            # + 1, in case of zero values
+            fold_change = (values_1[transcript] + 1)/(values_2[transcript] + 1)
+            errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
+            count +=1
+            if ((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])) > max:
+                max = (fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])
+                max_transcript = transcript
         else:
-            print(i, transcript)
-            errors.append((1-expected_values[transcript]) * (1-expected_values[transcript]))
+            if (transcript in values_1):
+                fold_change = values_1[transcript] + 1
+                errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
+            else if (transcript in values_2):
+                fold_change = values_2[transcript]+ 1
+                errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
+            else:
+                # If transcript is not found in both experiments, add expected value as error
+                # This is necessary because salmon does not give an answer for some transcripts for some reason
+                errors.append((expected_values[transcript]) * (expected_values[transcript]))
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
     #print(max, max_transcript, count)
