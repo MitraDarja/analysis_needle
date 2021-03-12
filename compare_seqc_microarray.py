@@ -1,19 +1,24 @@
 # Use:
 # seqc: python3 compare_seqc_microarray.py method(0, 1, 2 for needle count, kallisto or salmon) 0 secq_expression num_files data
+# kallisto: python3 compare_seqc_microarray.py 1 0 ../Chisanga_data/Taqman-raw.txt 16 ../kallisto/SEQC2012-ILM-AGR-*/abundance.tsv
+# salmon: python3 compare_seqc_microarray.py 2 0 ../Chisanga_data/Taqman-raw.txt 16 ../salmon-1.4.0/build/out/SEQC2012-ILM-AGR-*-*.out/quant.sf
+
 # microrray: python3 compare_seqc_microarray.py method(0, 1, 2 for needle count, kallisto or salmon) 1 secq_expression file with entred2gene_id_info num_files data
+# kallisto: python3 compare_seqc_microarray.py 1 1 ../Chisanga_data/BeadChip-Log2.table data/entrez_id2gene_id.txt 16 ../kallisto/SEQC2012-ILM-AGR-*/abundance.tsv
+# salmon: python3 compare_seqc_microarray.py 2 1 ../Chisanga_data/BeadChip-Log2.table data/entrez_id2gene_id.txt 16 ../salmon-1.4.0/build/out/SEQC2012-ILM-AGR-*-*.out/quant.sf
 
 import numpy as np
 import sys
 from scipy import stats
 
-
+# No normalization of sequencing data is necessary, because one looks only at one data set at a time
 def get_exp_value(line, method):
     if (method == 0):
         return [int(x) for x in line.split()[1:]]
     elif (method == 1):
-        return  [float(line.split()[4])]
+        return  [float(line.split()[3])]
     elif (method == 2):
-        return [float(line.split()[3])]
+        return [float(line.split()[4])]
 
 method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon
 microrray = int(sys.argv[2]) # 0: seqc 1: microarrayy
