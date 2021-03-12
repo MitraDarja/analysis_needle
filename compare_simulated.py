@@ -85,7 +85,7 @@ for i in range(0, len(files), 2):
             if (transcript in values_1):
                 fold_change = values_1[transcript] + 1
                 errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
-            else if (transcript in values_2):
+            elif (transcript in values_2):
                 fold_change = values_2[transcript]+ 1
                 errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
             else:
