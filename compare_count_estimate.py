@@ -22,6 +22,7 @@ with open(estimate_file, "r") as f:
         count +=1
         transcript = line.split()[0].split('|')[0]
         exp_list = [int(x) for x in line.split()[1:]]
+        # print()
         estimate.update({transcript: exp_list})
 
 for i in range(num_files):
@@ -31,7 +32,7 @@ for i in range(num_files):
         for line in f:
             transcript = line.split()[0].split('|')[0]
             exp = int(line.split()[1:][0])
-            if estimate[transcript][i] > 0:
+            if exp > 0:
                 count.append(exp)
                 estimate_values.append(estimate[transcript][i])
 
@@ -43,6 +44,7 @@ for i in range(num_files):
         spearman.append(stats.spearmanr(count,estimate_values)[0] )
     else:
         spearman.append(0)
+    print(i)
 
 print(pearson)
 print(np.mean(pearson), np.var(pearson))
