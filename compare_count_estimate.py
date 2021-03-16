@@ -6,10 +6,10 @@ from scipy import stats
 num_files = int(sys.argv[1])
 files = []
 j = 2
-for i in range(j, j+num_files+1):
+for i in range(j, j+num_files):
     files.append(sys.argv[i])
 
-estimate_file = sys.argv[j+num_files+2]
+estimate_file = sys.argv[j+num_files]
 
 pearson = []
 spearman = []
