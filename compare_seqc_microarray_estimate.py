@@ -85,10 +85,11 @@ for Letter in "ABCD":
     for it in range(4):
         for gene in seqc_values:
             if gene in values:
-                exps = np.array(values[gene][Letter])
-                expressions.append((np.mean(exps, axis = 0)[it]))
-                exps2 = np.array(seqc_values[gene][Letter])
-                seqc.append((np.mean(exps2, axis = 0)[it]))
+                if (np.mean(exps, axis = 0)[it] >= 0 ):
+                    exps = np.array(values[gene][Letter])
+                    expressions.append((np.mean(exps, axis = 0)[it]))
+                    exps2 = np.array(seqc_values[gene][Letter])
+                    seqc.append((np.mean(exps2, axis = 0)[it]))
             else:
                 miss += 1
 
