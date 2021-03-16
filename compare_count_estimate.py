@@ -13,31 +13,34 @@ estimate_file = sys.argv[j+num_files]
 
 pearson = []
 spearman = []
-estimate = []
+estimate = {}
 count = 0
 
 # Read estimate file
 with open(estimate_file, "r") as f:
     for line in f:
         count +=1
+        transcript = line.split()[0].split('|')[0]
         exp_list = [int(x) for x in line.split()[1:]]
-        estimate.append(exp_list)
-
-estimate = np.array(estimate)
+        estimate.update({transcript: exp_list})
 
 for i in range(num_files):
     count = []
+    estimate_values = []
     with open(files[i], "r") as f:
         for line in f:
+            transcript = line.split()[0].split('|')[0]
             exp = int(line.split()[1:][0])
-            count.append(exp)
+            if estimate[transcript][i] > 0:
+                count.append(exp)
+                estimate_values.append(estimate[transcript][i])
 
-    if (stats.pearsonr(count, estimate[:,i])[1] <= 0.005):
-        pearson.append(stats.pearsonr(count, estimate[:,i])[0] )
+    if (stats.pearsonr(count, estimate_values)[1] <= 0.005):
+        pearson.append(stats.pearsonr(count, estimate_values)[0] )
     else:
         pearson.append(0)
-    if (stats.spearmanr(count, estimate[:,i])[1] <= 0.005):
-        spearman.append(stats.spearmanr(count,estimate[:,i])[0] )
+    if (stats.spearmanr(count, estimate_values)[1] <= 0.005):
+        spearman.append(stats.spearmanr(count,estimate_values)[0] )
     else:
         spearman.append(0)
 
