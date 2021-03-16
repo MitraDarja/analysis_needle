@@ -6,10 +6,10 @@ from scipy import stats
 num_files = int(sys.argv[1])
 files = []
 j = 2
-for i in range(j, j+num_files):
+for i in range(j, j+num_files+1):
     files.append(sys.argv[i])
 
-estimate_file = sys.argv[j+num_files]
+estimate_file = sys.argv[j+num_files+2]
 
 pearson = []
 spearman = []
@@ -22,7 +22,6 @@ with open(estimate_file, "r") as f:
         count +=1
         transcript = line.split()[0].split('|')[0]
         exp_list = [int(x) for x in line.split()[1:]]
-        # print()
         estimate.update({transcript: exp_list})
 
 for i in range(num_files):
@@ -44,7 +43,6 @@ for i in range(num_files):
         spearman.append(stats.spearmanr(count,estimate_values)[0] )
     else:
         spearman.append(0)
-    print(i)
 
 print(pearson)
 print(np.mean(pearson), np.var(pearson))
