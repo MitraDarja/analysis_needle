@@ -54,7 +54,11 @@ for i in range(0, len(files), 2):
                 transcript = line.split()[0].split('|')[0]
                 exp_list = get_exp_value(line, method)
                 values_1.update({transcript:exp_list})
-                per_million_1 += exp_list
+                if (method == 0):
+                    per_million_1 += exp_list
+                # Kallisto and salmon need transcript length correction, for needle done by taking median
+                else:
+                    per_million_1 += exp_list/int(line.split('|')[6])
 
 
     with open(files[i+1], 'r') as f:
@@ -63,7 +67,11 @@ for i in range(0, len(files), 2):
                 transcript = line.split()[0].split('|')[0]
                 exp_list = get_exp_value(line, method)
                 values_2.update({transcript:exp_list})
-                per_million_2 += exp_list
+                if (method == 0):
+                    per_million_2 += exp_list
+                # Kallisto and salmon need transcript length correction, for needle done by taking median
+                else:
+                    per_million_2 += exp_list/int(line.split('|')[6])
 
     # TPM factor for both files
     per_million_1 = per_million_1/1000000.0
