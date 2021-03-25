@@ -71,7 +71,7 @@ if (method == 0):
         for letter in "ABCD":
             norm_all[letter][i] = norm_all[letter][i]/1000000.0
 else:
-    norm_all.update({"A":[1,1,1,1], "B":1,1,1,1], "C":[1,1,1,1], "D":[1,1,1,1]})
+    norm_all.update({"A":[1,1,1,1], "B":[1,1,1,1], "C":[1,1,1,1], "D":[1,1,1,1]})
 
 # Calculate MSE
 error = []
