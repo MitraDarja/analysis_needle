@@ -1,5 +1,6 @@
 # Use:
 # seqc: python3 compare_seqc_microarray.py method(0, 1, 2 for needle count, kallisto or salmon) 0 secq_expression num_files data
+# needle: python3 compare_seqc_microarray.py 0 0 ../Chisanga_data/Taqman-raw.txt 16 ../needle/build/Chisanga_data2/SEQC2012-ILM-AGR-*.out
 # kallisto: python3 compare_seqc_microarray.py 1 0 ../Chisanga_data/Taqman-raw.txt 16 ../kallisto/SEQC2012-ILM-AGR-*/abundance.tsv
 # salmon: python3 compare_seqc_microarray.py 2 0 ../Chisanga_data/Taqman-raw.txt 16 ../salmon-1.4.0/build/out/SEQC2012-ILM-AGR-*-*.out/quant.sf
 
@@ -108,12 +109,9 @@ for file in files:
     for gene in seqc_values:
         if gene in values:
             exps = np.array(values[gene])
-            if len(exps) == 1:
-                expressions.append(np.mean(exps, axis = 0))
-                exps2 = np.array(seqc_values[gene][Letter])
-                seqc.append((np.mean(exps2, axis = 0)[it]))
-            else:
-                miss +=1
+            expressions.append(np.mean(exps, axis = 0))
+            exps2 = np.array(seqc_values[gene][Letter])
+            seqc.append((np.mean(exps2, axis = 0)[it]))
         else:
             miss += 1
 
