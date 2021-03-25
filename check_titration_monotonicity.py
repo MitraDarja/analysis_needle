@@ -55,6 +55,24 @@ for file in files:
             Letters = Letters[1:]
             it = 0
 
+# Normalization
+norm_all = {}
+for i in range(4):
+    norm_all.update({"A":[0,0,0,0], "B":[0,0,0,0], "C":[0,0,0,0], "D":[0,0,0,0]})
+for it in range(4):
+    for gene in values[it]:
+        gene_count +=1
+        for l in "ABCD":
+            exps = np.array(values[it][gene][l])
+            if (method == 0):
+                norm_all[l][it] += np.mean(exps, axis = 0)
+            else:
+                norm_all[l][it] += np.mean(exps, axis = 0)/np.mean(gene_lengths[gene])
+
+for i in range(4):
+    for letter in "ABCD":
+        norm_all[letter][i] = norm_all[letter][i]/1000000.0
+
 # Calculate MSE
 error = []
 for it in range(4):
@@ -63,7 +81,7 @@ for it in range(4):
         gene_count +=1
         for letter in "ABCD":
             exps = np.array(values[it][gene][letter])
-            gene_expressions.append(np.mean(exps, axis = 0))
+            gene_expressions.append(np.mean(exps, axis = 0)/norm_all[letter][it])
         # + 1 for dealing with zeros
         expected_fold_change_c_d = np.log2(1+float(gene_expressions[0] + (3*gene_expressions[3]))/((gene_expressions[3] + 1 + (3*gene_expressions[0])))) # A+3B/3A+B = B/A
         fold_change_a_b = np.log2(1+float(gene_expressions[3])/(gene_expressions[0]+1))
