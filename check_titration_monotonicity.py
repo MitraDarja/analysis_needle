@@ -58,21 +58,20 @@ for file in files:
 
 # Normalization
 norm_all = {}
-for i in range(4):
-    norm_all.update({i:{"A":[0,0,0,0], "B":[0,0,0,0], "C":[0,0,0,0], "D":[0,0,0,0]}})
+norm_all.update({"A":[0,0,0,0], "B":[0,0,0,0], "C":[0,0,0,0], "D":[0,0,0,0]})
 for it in range(4):
     for gene in values[it]:
         gene_count +=1
         for l in "ABCD":
             exps = np.array(values[it][gene][l])
             if (method == 0):
-                norm_all[it][l] += np.mean(exps, axis = 0)
+                norm_all[l][it] += np.mean(exps, axis = 0)
             else:
-                norm_all[it][l] += np.mean(exps, axis = 0)/np.mean(gene_lengths[gene])
+                norm_all[l][it] += np.mean(exps, axis = 0)/np.mean(gene_lengths[gene])
 
 for i in range(4):
     for letter in "ABCD":
-        norm_all[i][letter] = norm_all[i][letter]/1000000.0
+        norm_all[letter][i] = norm_all[letter][i]/1000000.0
 
 # Calculate MSE
 print(norm_all)
