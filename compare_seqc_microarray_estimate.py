@@ -85,11 +85,10 @@ for Letter in "ABCD":
     for it in range(4):
         for gene in seqc_values:
             if gene in values:
-                if (np.mean(exps, axis = 0)[it] >= 0 ):
-                    exps = np.array(values[gene][Letter])
-                    expressions.append((np.mean(exps, axis = 0)[it]))
-                    exps2 = np.array(seqc_values[gene][Letter])
-                    seqc.append((np.mean(exps2, axis = 0)[it]))
+                exps = np.array(values[gene][Letter])
+                expressions.append((np.mean(exps, axis = 0)[it]))
+                exps2 = np.array(seqc_values[gene][Letter])
+                seqc.append((np.mean(exps2, axis = 0)[it]))
             else:
                 miss += 1
 
@@ -106,11 +105,3 @@ print(pearson)
 print(np.mean(pearson), np.var(pearson))
 print(spearman)
 print(np.mean(spearman), np.var(spearman))
-spearman_means = []
-spearman = np.array(spearman)
-before = 0
-for i in range(4,20,4):
-    spearman_means.append(np.mean(spearman[before:i]))
-    before = i
-print(spearman_means)
-print(np.mean(spearman_means), np.var(spearman_means))
