@@ -62,7 +62,6 @@ if (method == 0):
     norm_all.update({"A":[0,0,0,0], "B":[0,0,0,0], "C":[0,0,0,0], "D":[0,0,0,0]})
     for it in range(4):
         for gene in values[it]:
-            gene_count +=1
             for l in "ABCD":
                 exps = np.array(values[it][gene][l])
                 norm_all[l][it] += np.mean(exps, axis = 0)
