@@ -3,17 +3,7 @@ import sys
 from scipy import stats
 
 
-# TPM values of kallisto and salmon are used, because different experiments are compared to each other
-def get_exp_value(line, method):
-    if (method == 0):
-        return [int(x) for x in line.split()[1:]]
-    elif (method == 1):
-        return  [float(line.split()[4])]
-    elif (method == 2):
-        return [float(line.split()[3])]
-
-method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon
-expression_file = int(sys.argv[2])
+expression_file = sys.argv[1]
 
 iterator = 0
 Letter = "A"
@@ -43,19 +33,17 @@ with open(expression_file, 'r') as f:
 
 # Normalization, a normalization should be performed because different experiments are compared to each other
 norm_all = {}
-if (method == 0):
-    norm_all.update({"A":[0,0,0,0], "B":[0,0,0,0], "C":[0,0,0,0], "D":[0,0,0,0]})
-    for it in range(4):
-        for gene in values[it]:
-            for l in "ABCD":
-                exps = np.array(np.means(values[gene][l], axis = 0)[it])
-                norm_all[l][it] += exps
+norm_all.update({"A":[0,0,0,0], "B":[0,0,0,0], "C":[0,0,0,0], "D":[0,0,0,0]})
+for it in range(4):
+    for gene in values[it]:
+        for l in "ABCD":
+            exps = np.array(np.means(values[gene][l], axis = 0)[it])
+            norm_all[l][it] += exps
 
-    for i in range(4):
-        for letter in "ABCD":
-            norm_all[letter][i] = norm_all[letter][i]/1000000.0
-else:
-    norm_all.update({"A":[1,1,1,1], "B":[1,1,1,1], "C":[1,1,1,1], "D":[1,1,1,1]})
+for i in range(4):
+    for letter in "ABCD":
+        norm_all[letter][i] = norm_all[letter][i]/1000000.0
+
 
 # Calculate MSE
 error = []
