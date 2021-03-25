@@ -88,4 +88,4 @@ for it in range(4):
         error.append((expected_fold_change_c_d-fold_change_c_d)* (expected_fold_change_c_d-fold_change_c_d))
 
 print(gene_count)
-print(np.mean(error), len(error))
+print(np.mean(error), np.var(error), len(error))
