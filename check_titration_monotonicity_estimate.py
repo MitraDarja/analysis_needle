@@ -35,9 +35,9 @@ with open(expression_file, 'r') as f:
 norm_all = {}
 norm_all.update({"A":[0,0,0,0], "B":[0,0,0,0], "C":[0,0,0,0], "D":[0,0,0,0]})
 for it in range(4):
-    for gene in values[it]:
+    for gene in values:
         for l in "ABCD":
-            exps = np.array(np.means(values[gene][l], axis = 0)[it])
+            exps = np.array(np.mean(values[gene][l], axis = 0)[it])
             norm_all[l][it] += exps
 
 for i in range(4):
@@ -48,7 +48,7 @@ for i in range(4):
 # Calculate MSE
 error = []
 for it in range(4):
-    for gene in values[it]:
+    for gene in values:
         gene_expressions = []
         gene_count +=1
         for letter in "ABCD":
