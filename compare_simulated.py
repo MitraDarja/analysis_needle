@@ -29,6 +29,7 @@ for i in range(j+2, j+2+num_files):
 
 mse = []
 files_no = 1
+count = 0
 for i in range(0, len(files), 2):
     values_1 = {}
     values_2 = {}
@@ -38,8 +39,7 @@ for i in range(0, len(files), 2):
     per_million_2 = 0
     max = 0
     max_transcript = ""
-    count = 0
-    with open(dir + "Test_"+str(files_no)+".tsv", 'r') as f:
+    with open(dir + "Test_"+str(files_no)+"/sim_tx_info.txt", 'r') as f:
         for line in f:
             if line[0] != "t":
                 transcript = line.split()[0].split('|')[0]
@@ -75,43 +75,18 @@ for i in range(0, len(files), 2):
         per_million_2 = 1
     for transcript in expected_values:
         if (transcript in values_1) & (transcript in values_2):
-            # Rounding of values for kallisto, which has sometimes really small values, which lead to
-            # nonsensical fold changes, because there are unreasonably large
-            values_1[transcript] = round(values_1[transcript], 2)/per_million_1
-            values_2[transcript] = round(values_2[transcript], 2)/per_million_2
+            values_1[transcript] = values_1[transcript]/per_million_1
+            values_2[transcript] = values_2[transcript]/per_million_2
             # + 1, in case of zero values
-            if ((values_1[transcript] > 0) & (values_2[transcript] > 0)):
-                fold_change = (values_1[transcript] + 1)/(values_2[transcript] + 1)
+            if (values_2[transcript] >= 1):
+                fold_change = (values_1[transcript])/(values_2[transcript])
                 errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
                 count +=1
-                if ((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])) > max:
-                    max = (fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])
-                    max_transcript = transcript
-            elif (values_1[transcript] > 0):
-                fold_change = values_1[transcript]
-                errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
-            elif (values_2[transcript] > 0):
-                fold_change = values_2[transcript]
-                errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
-            else:
-                # If transcript is not found in both experiments, add expected value as error
-                # This is necessary because salmon does not give an answer for some transcripts for some reason
-                errors.append((expected_values[transcript]) * (expected_values[transcript]))
-        else:
-            if (transcript in values_1):
-                fold_change = values_1[transcript]
-                errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
-            elif (transcript in values_2):
-                fold_change = values_2[transcript]
-                errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
-            else:
-                # If transcript is not found in both experiments, add expected value as error
-                # This is necessary because salmon does not give an answer for some transcripts for some reason
-                errors.append((expected_values[transcript]) * (expected_values[transcript]))
+
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
     #print(max, max_transcript, count)
 
 
 print("Mean Squared error:\n", mse)
-print(np.mean(mse), np.var(mse))
+print(np.mean(mse), np.var(mse), count)
