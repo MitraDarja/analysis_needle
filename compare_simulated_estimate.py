@@ -2,7 +2,7 @@ import numpy as np
 import sys
 from scipy import stats
 
-expression_file = int(sys.argv[1])
+expression_file = sys.argv[1]
 dir = sys.argv[2]
 num_files = int(sys.argv[3])
 
@@ -16,7 +16,7 @@ with open(expression_file, 'r') as f:
 mse = []
 files_no = 1
 count = 0
-for i in range(0, len(files), 2):
+for i in range(0, num_files, 2):
     values_1 = {}
     values_2 = {}
     expected_values = {}
@@ -54,7 +54,7 @@ for i in range(0, len(files), 2):
                 fold_change = (values_1[transcript] + 1)/(values_2[transcript] + 1)
                 errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
                 count +=1
-                
+
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
 
