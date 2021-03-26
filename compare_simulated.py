@@ -77,15 +77,25 @@ for i in range(0, len(files), 2):
         if (transcript in values_1) & (transcript in values_2):
             values_1[transcript] = values_1[transcript]/per_million_1
             values_2[transcript] = values_2[transcript]/per_million_2
-            # + 1, in case of zero values
-            if (values_2[transcript] >= 1):
-                fold_change = (values_1[transcript])/(values_2[transcript])
-                errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
-                count +=1
+            # The distinction here is necessary because kallisto and salmon have some cases, where
+            # values_2[transcript]==0 and values_1[transcript] is a bigger number, which then leads to crass outliers,
+            # which skew the mean. The comparison is still fair, because the number of elements in error is similar
+            # for all three experiments.
+            if (method == 0):
+                if (values_2[transcript] >= 0):
+                    # + 1, in case of zero values
+                    fold_change = (values_1[transcript] + 1)/(values_2[transcript] + 1)
+                    errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
+                    count +=1
+            else:
+                if (values_2[transcript] > 0):
+                    # + 1, in case of values below 1
+                    fold_change = (values_1[transcript] + 1)/(values_2[transcript] + 1)
+                    errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
+                    count +=1
 
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
-    #print(max, max_transcript, count)
 
 
 print("Mean Squared error:\n", mse)
