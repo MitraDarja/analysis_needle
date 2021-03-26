@@ -83,12 +83,13 @@ for i in range(0, len(files), 2):
             values_1[transcript] = round(values_1[transcript], 2)/per_million_1
             values_2[transcript] = round(values_2[transcript], 2)/per_million_2
             # + 1, in case of zero values
-            fold_change = (values_1[transcript] + 1)/(values_2[transcript] + 1)
-            errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
-            count +=1
-            if ((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])) > max:
-                max = (fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])
-                max_transcript = transcript
+            if ((values_1[transcript] > 0) & (values_2[transcript] > 0)):
+                fold_change = (values_1[transcript] + 1)/(values_2[transcript] + 1)
+                errors.append((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript]))
+                count +=1
+                if ((fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])) > max:
+                    max = (fold_change-expected_values[transcript]) * (fold_change-expected_values[transcript])
+                    max_transcript = transcript
         else:
             if (transcript in values_1):
                 fold_change = values_1[transcript] + 1
