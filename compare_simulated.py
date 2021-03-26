@@ -67,7 +67,7 @@ for i in range(0, len(files), 2):
 
 
     # TPM factor for both files
-    if (method == 0)
+    if (method == 0):
         per_million_1 = per_million_1/1000000.0
         per_million_2 = per_million_2/1000000.0
     else:
