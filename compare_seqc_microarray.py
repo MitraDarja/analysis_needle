@@ -21,21 +21,56 @@ def get_exp_value(line, method):
     elif (method == 2):
         return [float(line.split()[4])]
 
-method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon
+# Needle does not estimate where a sequence is mostly likely coming from, so if transcripts share some sequence,
+# reads overlaping this shared sequence are considered for multiple transcripts. That is why, the mean should be taken.
+# Kallisto and salmmon on the other hand, approximate the most likely transcript a read is coming from and therefore
+# do not count reads more than once, therefore sum is the appropiate method.
+def get_transcript_exp(expressions, method, it):
+    if (method == 0):
+        return np.mean(expressions, axis = 0)
+    elif (method != 3):
+        return np.sum(expressions, axis = 0)
+    else:
+        return np.mean(expressions, axis = 0)[it]
+
+def read_file(file, values, method):
+    with open(file, 'r') as f:
+        for line in f:
+            if (line[0] != "t") & (line[0] != "N"):
+                gene = line.split()[0].split('|')[5]
+                exp_list = get_exp_value(line, method)
+                if gene in values:
+                    values[gene].append(exp_list[0])
+                else:
+                    values.update({gene:exp_list})
+
+def read_needle_estimate(estimate_file, estimate):
+    # Read estimate file
+    with open(estimate_file, "r") as f:
+        for line in f:
+            gene = line.split()[0].split('|')[1]
+            exp_list = [int(x) for x in line.split()[1:]]
+            if gene in estimate:
+                estimate[gene].append(exp_list)
+            else:
+                estimate.update({gene:[exp_list]})
+
+method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon, 3: needle estimate
 microrray = int(sys.argv[2]) # 0: seqc 1: microarrayy
 j = 3
+files = []
 if microrray:
     seqc_file = sys.argv[j]
     seqc_file2 = sys.argv[j+1]
     num_files = int(sys.argv[j+2])
-    files = []
-    for i in range(j+3, j+3+num_files):
-        files.append(sys.argv[i])
+    j += 3
 else:
     seqc_file = sys.argv[j]
     num_files = int(sys.argv[j+1])
-    files = []
-    for i in range(j+2, j+2+num_files):
+    j += 2
+
+if (method != 3):
+    for i in range(j, j+num_files):
         files.append(sys.argv[i])
 
 seqc_values = {}
@@ -88,29 +123,23 @@ with open(seqc_file, 'r') as f:
                 seqc_values[gene]["C"].append(exp_list_C)
                 seqc_values[gene]["D"].append(exp_list_D)
 
-gene_lengths = {}
-for file in files:
-    values = {}
-    with open(file, 'r') as f:
-        for line in f:
-            if (line[0] != "t") & (line[0] != "N"):
-                gene = line.split()[0].split('|')[5]
-                exp_list = get_exp_value(line, method)
-                length = int(line.split()[1])
-                if gene in values:
-                    values[gene].append(exp_list[0])
-                    gene_lengths[gene].append(length)
-                else:
-                    values.update({gene:exp_list})
-                    gene_lengths.update({gene:[length]})
+values = {}
+if (method == 3):
+    read_needle_estimate(sys.argv[j], values)
+
+for f in range(num_files):
+    if (method != 3):
+        values = {}
+        read_file(files[f], values, method)
 
     seqc = []
     expressions = []
     for gene in seqc_values:
         if gene in values:
             exps = np.array(values[gene])
-            if (np.mean(exps, axis = 0)) > 0.01:
-                expressions.append(np.mean(exps, axis = 0))
+            exps_value = get_transcript_exp(exps, method, f)
+            if (exps_value> 0.01):
+                expressions.append(exps_value)
                 exps2 = np.array(seqc_values[gene][Letter])
                 seqc.append((np.mean(exps2, axis = 0)[it]))
             else:
