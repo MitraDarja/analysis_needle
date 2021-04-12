@@ -12,7 +12,7 @@ import numpy as np
 import sys
 from scipy import stats
 
-# TPM values of kallisto and salmon considered to have a length correction.
+# Raw counts are used, because there is no need to look at TPM, if only one experiment is looked at.
 def get_exp_value(line, method):
     if (method == 0):
         return [int(x) for x in line.split()[1:]]
@@ -33,16 +33,19 @@ def get_transcript_exp(expressions, method, it):
     else:
         return np.mean(expressions, axis = 0)[it]
 
-def read_file(file, values, method):
+def read_file(file, values, method, lengths = {}):
     with open(file, 'r') as f:
         for line in f:
             if (line[0] != "t") & (line[0] != "N"):
                 gene = line.split()[0].split('|')[5]
                 exp_list = get_exp_value(line, method)
+                length = [int(line.split()[1])]
                 if gene in values:
                     values[gene].append(exp_list[0])
+                    lengths[gene].append(length[0])
                 else:
                     values.update({gene:exp_list})
+                    lengths.update({gene:length})
 
 def read_needle_estimate(estimate_file, estimate):
     # Read estimate file
@@ -130,7 +133,8 @@ if (method == 3):
 for f in range(num_files):
     if (method != 3):
         values = {}
-        read_file(files[f], values, method)
+        lengths = {}
+        read_file(files[f], values, method, lengths)
 
     seqc = []
     expressions = []
@@ -139,7 +143,10 @@ for f in range(num_files):
             exps = np.array(values[gene])
             exps_value = get_transcript_exp(exps, method, f)
             if (exps_value> 0.01):
-                expressions.append(exps_value)
+                if ((method == 1) |  (method == 2)):
+                    expressions.append(exps_value/np.mean(lengths[gene], axis = 0))
+                else:
+                    expressions.append(exps_value)
                 exps2 = np.array(seqc_values[gene][Letter])
                 seqc.append((np.mean(exps2, axis = 0)[it]))
             else:
