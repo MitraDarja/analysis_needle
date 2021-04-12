@@ -138,11 +138,8 @@ for f in range(num_files):
         if gene in values:
             exps = np.array(values[gene])
             exps_value = get_transcript_exp(exps, method, f)
-            if (exps_value> 0.01):
-                if ((method == 1) |  (method == 2)):
-                    expressions.append(exps_value/np.mean(lengths[gene], axis = 0))
-                else:
-                    expressions.append(exps_value)
+            if (exps_value>= 0.0):
+                expressions.append(exps_value)
                 exps2 = np.array(seqc_values[gene][Letter])
                 seqc.append((np.mean(exps2, axis = 0)[it]))
             else:
