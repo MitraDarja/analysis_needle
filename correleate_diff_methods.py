@@ -21,7 +21,7 @@ def get_exp_value(line, method):
 def get_transcript_exp(expressions, method, it):
     if (method == 0):
         return np.mean(expressions, axis = 0)
-    elif (method != 4):
+    elif (method != 3):
         return np.sum(expressions, axis = 0)
     else:
         return np.mean(expressions, axis = 0)[it]
@@ -49,14 +49,14 @@ def read_needle_estimate(estimate_file, estimate):
             else:
                 estimate.update({gene:[exp_list]})
 
-method_1 = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon, 4: needle estimate
-method_2 = int(sys.argv[2]) # 0: needle count 1: kallisto 2: salmon, 4: needle estimate
+method_1 = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon, 3: needle estimate
+method_2 = int(sys.argv[2]) # 0: needle count 1: kallisto 2: salmon, 3: needle estimate
 method1_values = {}
 method2_values = {}
 j = 3
 num_files = int(sys.argv[j])
 files_1 = []
-if (method_1 != 4):
+if (method_1 != 3):
     for i in range(j+1, j+1+num_files):
         files_1.append(sys.argv[i])
     j += 1+num_files
@@ -65,7 +65,7 @@ else:
     j += 2
 
 files_2 = []
-if (method_2 != 4):
+if (method_2 != 3):
     for i in range(j, j+num_files):
         files_2.append(sys.argv[i])
 else:
@@ -75,10 +75,10 @@ pearson = []
 spearman = []
 miss = 0
 for i in range(num_files):
-    if (method_1 != 4):
+    if (method_1 != 3):
         method1_values = {}
         read_file(files_1[i], method1_values, method_1)
-    if (method_2 != 4):
+    if (method_2 != 3):
         method2_values = {}
         read_file(files_2[i], method2_values, method_2)
 
