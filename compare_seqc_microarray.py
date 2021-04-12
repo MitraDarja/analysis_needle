@@ -12,14 +12,14 @@ import numpy as np
 import sys
 from scipy import stats
 
-# No normalization of sequencing data is necessary, because one looks only at one data set at a time
+# TPM values of kallisto and salmon considered to have a length correction.
 def get_exp_value(line, method):
     if (method == 0):
         return [int(x) for x in line.split()[1:]]
     elif (method == 1):
-        return  [float(line.split()[3])]
+        return  [float(line.split()[4])]
     elif (method == 2):
-        return [float(line.split()[4])]
+        return [float(line.split()[3])]
 
 # Needle does not estimate where a sequence is mostly likely coming from, so if transcripts share some sequence,
 # reads overlaping this shared sequence are considered for multiple transcripts. That is why, the mean should be taken.
