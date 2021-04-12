@@ -12,7 +12,7 @@ import numpy as np
 import sys
 from scipy import stats
 
-# Raw counts are used, because there is no need to look at TPM, if only one experiment is looked at.
+# TPM values are used for kallisto and salmon in order to have a length correction.
 def get_exp_value(line, method):
     if (method == 0):
         return [int(x) for x in line.split()[1:]]
@@ -33,19 +33,16 @@ def get_transcript_exp(expressions, method, it):
     else:
         return np.mean(expressions, axis = 0)[it]
 
-def read_file(file, values, method, lengths = {}):
+def read_file(file, values, method):
     with open(file, 'r') as f:
         for line in f:
             if (line[0] != "t") & (line[0] != "N"):
                 gene = line.split()[0].split('|')[5]
                 exp_list = get_exp_value(line, method)
-                length = [int(line.split()[1])]
                 if gene in values:
                     values[gene].append(exp_list[0])
-                    lengths[gene].append(length[0])
                 else:
                     values.update({gene:exp_list})
-                    lengths.update({gene:length})
 
 def read_needle_estimate(estimate_file, estimate):
     # Read estimate file
@@ -133,8 +130,7 @@ if (method == 3):
 for f in range(num_files):
     if (method != 3):
         values = {}
-        lengths = {}
-        read_file(files[f], values, method, lengths)
+        read_file(files[f], values, method)
 
     seqc = []
     expressions = []
