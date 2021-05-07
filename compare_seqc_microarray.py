@@ -55,7 +55,7 @@ def read_needle_estimate(estimate_file, estimate):
             else:
                 estimate.update({gene:[exp_list]})
 
-method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon, 3: needle estimate
+method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon, 3: needle estimate or reindeer after running reinder_estimate.py
 microrray = int(sys.argv[2]) # 0: seqc 1: microarrayy
 j = 3
 files = []
