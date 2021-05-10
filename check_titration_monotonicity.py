@@ -12,7 +12,7 @@ def get_exp_value(line, method):
     elif (method == 2):
         return [float(line.split()[3])]
 
-method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon
+method = int(sys.argv[1]) # 0: needle count 1: kallisto 2: salmon 3: needle estimate or REINDEER
 num_files = int(sys.argv[2])
 
 iterator = 0
@@ -76,14 +76,19 @@ else:
 
 # Normalization, a normalization should be performed because different experiments are compared to each other
 norm_all = {}
-if (method == 0):
+if (method == 0) | (method == 3):
     norm_all.update({"A":[0,0,0,0], "B":[0,0,0,0], "C":[0,0,0,0], "D":[0,0,0,0]})
     for it in range(4):
-        for gene in values[it]:
-            for l in "ABCD":
-                exps = np.array(values[it][gene][l])
-                norm_all[l][it] += np.mean(exps, axis = 0)
-
+        if (method == 0):
+            for gene in values[it]:
+                for l in "ABCD":
+                    exps = np.array(values[it][gene][l])
+                    norm_all[l][it] += np.mean(exps, axis = 0)
+        else:
+            for gene in values:
+                for l in "ABCD":
+                    exps = np.array(np.mean(values[gene][l], axis = 0)[it])
+                    norm_all[l][it] += exps
     for i in range(4):
         for letter in "ABCD":
             norm_all[letter][i] = norm_all[letter][i]/1000000.0
@@ -93,17 +98,30 @@ else:
 # Calculate MSE
 error = []
 for it in range(4):
-    for gene in values[it]:
-        gene_expressions = []
-        gene_count +=1
-        for letter in "ABCD":
-            exps = np.array(values[it][gene][letter])
-            gene_expressions.append(exps/norm_all[letter][it])
-        # + 1 for dealing with zeros
-        expected_fold_change_c_d = np.log2(1+float(gene_expressions[0] + (3*gene_expressions[3]))/((gene_expressions[3] + 1 + (3*gene_expressions[0])))) # A+3B/3A+B = B/A
-        fold_change_a_b = np.log2(1+float(gene_expressions[3])/(gene_expressions[0]+1))
-        fold_change_c_d = np.log2(1+float(gene_expressions[2])/(gene_expressions[1]+1))
-        error.append((expected_fold_change_c_d-fold_change_c_d)* (expected_fold_change_c_d-fold_change_c_d))
+    if (method != 3):
+        for gene in values[it]:
+            gene_expressions = []
+            gene_count +=1
+            for letter in "ABCD":
+                exps = np.array(values[it][gene][letter])
+                gene_expressions.append(exps/norm_all[letter][it])
+            # + 1 for dealing with zeros
+            expected_fold_change_c_d = np.log2(1+float(gene_expressions[0] + (3*gene_expressions[3]))/((gene_expressions[3] + 1 + (3*gene_expressions[0])))) # A+3B/3A+B = B/A
+            fold_change_a_b = np.log2(1+float(gene_expressions[3])/(gene_expressions[0]+1))
+            fold_change_c_d = np.log2(1+float(gene_expressions[2])/(gene_expressions[1]+1))
+            error.append((expected_fold_change_c_d-fold_change_c_d)* (expected_fold_change_c_d-fold_change_c_d))
+    else:
+        for gene in values:
+            gene_expressions = []
+            gene_count +=1
+            for letter in "ABCD":
+                exps = np.array(values[gene][letter])
+                gene_expressions.append(np.mean(exps, axis = 0)[it]/norm_all[letter][it])
+            # + 1 for dealing with zeros
+            expected_fold_change_c_d = np.log2(1+float(gene_expressions[0] + (3*gene_expressions[3]))/((gene_expressions[3] + 1 + (3*gene_expressions[0])))) # A+3B/3A+B = B/A
+            fold_change_a_b = np.log2(1+float(gene_expressions[3])/(gene_expressions[0]+1))
+            fold_change_c_d = np.log2(1+float(gene_expressions[2])/(gene_expressions[1]+1))
+            error.append((expected_fold_change_c_d-fold_change_c_d)* (expected_fold_change_c_d-fold_change_c_d))
 
 print(gene_count)
 print(np.mean(error), np.var(error), len(error))
