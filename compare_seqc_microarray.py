@@ -48,7 +48,7 @@ def read_needle_estimate(estimate_file, estimate):
     # Read estimate file
     with open(estimate_file, "r") as f:
         for line in f:
-            gene = line.split()[0].split('|')[1]
+            gene = line.split()[0].split('|')[5]
             exp_list = [int(x) for x in line.split()[1:]]
             if gene in estimate:
                 estimate[gene].append(exp_list)
@@ -138,9 +138,9 @@ for f in range(num_files):
         if gene in values:
             exps = np.array(values[gene])
             exps_value = get_transcript_exp(exps, method, f)
-            if (exps_value>= 0.0):
+            exps2 = np.array(seqc_values[gene][Letter])
+            if ((np.mean(exps2, axis = 0)[it]) >= 0.01):
                 expressions.append(exps_value)
-                exps2 = np.array(seqc_values[gene][Letter])
                 seqc.append((np.mean(exps2, axis = 0)[it]))
             else:
                 miss +=1
