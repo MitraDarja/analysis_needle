@@ -37,7 +37,7 @@ if (method != 3):
             for line in f:
                 if (line[0] == "N") | (line[0] == "t"):
                     continue
-                gene =  line.split()[0].split('|')[0]
+                gene =  line.split()[0].split('|')[5]
                 exp_list = get_exp_value(line, method)
                 length = int(line.split('|')[6])
                 if gene in values[it]:
@@ -104,7 +104,7 @@ for it in range(4):
             gene_count +=1
             for letter in "ABCD":
                 exps = np.array(values[it][gene][letter])
-                gene_expressions.append(exps/norm_all[letter][it])
+                gene_expressions.append(np.mean(exps, axis = 0)/norm_all[letter][it])
             # + 1 for dealing with zeros
             expected_fold_change_c_d = np.log2(1+float(gene_expressions[0] + (3*gene_expressions[3]))/((gene_expressions[3] + 1 + (3*gene_expressions[0])))) # A+3B/3A+B = B/A
             fold_change_a_b = np.log2(1+float(gene_expressions[3])/(gene_expressions[0]+1))
