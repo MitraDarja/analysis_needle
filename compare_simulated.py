@@ -10,7 +10,6 @@ from scipy import stats
 
 # Here two experiments are compared, so a normalization like TPM should be used. kallisto and salmon provide a TPM
 # normalization and return the TPM value for every transcript, this value is used here.
-# A TPM-normalization is done for Needle later in this script.
 def get_exp_value(line, method):
     if (method == 0):
         return [int(x) for x in line.split()[1:]][0]
@@ -35,8 +34,6 @@ for i in range(0, len(files), 2):
     values_2 = {}
     expected_values = {}
     errors = []
-    per_million_1 = 0
-    per_million_2 = 0
     max = 0
     max_transcript = ""
     with open(dir + "Test_"+str(files_no)+"/sim_tx_info.txt", 'r') as f:
@@ -53,8 +50,6 @@ for i in range(0, len(files), 2):
                 transcript = line.split()[0].split('|')[0]
                 exp_list = get_exp_value(line, method)
                 values_1.update({transcript:exp_list})
-                if (method == 0):
-                    per_million_1 += exp_list
 
     with open(files[i+1], 'r') as f:
         for line in f:
@@ -62,21 +57,11 @@ for i in range(0, len(files), 2):
                 transcript = line.split()[0].split('|')[0]
                 exp_list = get_exp_value(line, method)
                 values_2.update({transcript:exp_list})
-                if (method == 0):
-                    per_million_2 += exp_list
 
-
-    # TPM factor for both files
-    if (method == 0):
-        per_million_1 = per_million_1/1000000.0
-        per_million_2 = per_million_2/1000000.0
-    else:
-        per_million_1 = 1
-        per_million_2 = 1
     for transcript in expected_values:
         if (transcript in values_1) & (transcript in values_2):
-            values_1[transcript] = values_1[transcript]/per_million_1
-            values_2[transcript] = values_2[transcript]/per_million_2
+            values_1[transcript] = values_1[transcript]
+            values_2[transcript] = values_2[transcript]
             # The distinction here is necessary because kallisto and salmon have some cases, where
             # values_2[transcript]==0 and values_1[transcript] is a bigger number, which then leads to crass outliers,
             # which skew the mean. The comparison is still fair, because the number of elements in error is similar
