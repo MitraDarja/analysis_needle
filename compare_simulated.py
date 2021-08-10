@@ -82,6 +82,44 @@ for i in range(0, len(files), 2):
     mean_square_error = np.mean(errors)
     mse.append(mean_square_error)
 
+print("Mean Squared error of fold change:\n", mse)
+print(np.mean(mse), np.var(mse), count)
 
-print("Mean Squared error:\n", mse)
+
+mse = []
+count = 0
+expected_value = 1 # normalization should have "fixed" different coverages
+for i in range(1, 20, 2):
+    values_1 = {}
+    values_2 = {}
+    errors = []
+
+    with open(files[i], 'r') as f:
+        for line in f:
+            if (line[0] != "t") & (line[0] != "N"):
+                transcript = line.split()[0].split('|')[0]
+                exp_list = get_exp_value(line, method)
+                values_1.update({transcript:exp_list})
+
+    with open(files[i+20], 'r') as f:
+        for line in f:
+            if (line[0] != "t") & (line[0] != "N"):
+                transcript = line.split()[0].split('|')[0]
+                exp_list = get_exp_value(line, method)
+                values_2.update({transcript:exp_list})
+
+    for transcript in expected_values:
+        if (transcript in values_1) & (transcript in values_2):
+            values_1[transcript] = values_1[transcript]
+            values_2[transcript] = values_2[transcript]
+
+            if ((values_1[transcript] >= 1) & (values_2[transcript] >= 1)):
+                    fold_change = values_2[transcript]/values_1[transcript]
+                    errors.append((fold_change-expected_value) * (fold_change-expected_value))
+                    count +=1
+
+    mean_square_error = np.mean(errors)
+    mse.append(mean_square_error)
+
+print("Mean Squared error of coverage:\n", mse)
 print(np.mean(mse), np.var(mse), count)
