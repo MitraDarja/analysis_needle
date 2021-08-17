@@ -1,17 +1,22 @@
+#!/usr/bin/env Rscript
 library(Biostrings)
 library("edgeR")
 library("polyester")
 
 # Script to create the simulated data set
 
-# Data are the proteincoding transcript sequences from https://www.gencodegenes.org/human/
-fastapath = "data/gencode.v36.pc_transcripts_k_23.fa.gz"
+# Data are random transcripts from the proteincoding transcript sequences from https://www.gencodegenes.org/human/
+args = commandArgs(trailingOnly=TRUE)
+if (length(args)==0) {
+  stop("At least one argument must be supplied (input file).n", call.=FALSE)
+}
+fastapath = args[1]
 
 fastafile = system.file('extdata', fastapath, package='polyester')
 fasta = readDNAStringSet(fastapath)
 
-trials = 20
-coverage = 40
+trials = 100
+coverage = 5
 bp_length = 75
 howManyGenes = 0.1 * length(fasta) # 10 % of transcripts are differently expressed
 for (j in (1:trials)) {
@@ -38,4 +43,8 @@ for (j in (1:trials)) {
 
   fasta = readDNAStringSet(fastapath)
   print(j)
+  if ((j%%10) == 0)
+  {
+    coverage = coverage + 5
+  }
 }
