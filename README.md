@@ -122,42 +122,27 @@ python3 check_titration_monotonicity.py [X] 16 [DATA]
 
 The purpose of this analysis is to determine the space and speed consumption of Needle compared to its main competitor
 REINDEER.
-Time was measured by /usr/bin/time -v. (Tests were run with either 1 thread or 32 threads, add `-t | --threads` to the
+Time was measured by /usr/bin/time -v. (Tests were run with either 1 thread, 4 or 32 threads, add `-t | --threads` to the
 commands to do the same.)
 
 ## Data
 
 For the analysis, a well known data set containing breast, brain and blood RNA sequence files was used. The complete list
-of experiments used by us can be found in `data\samples.in`. Please download these files as fastq.gz files.
+of experiments used by us can be found in `data\large_dataset.lst`. Please download these files as fastq.gz files.
 
 ## Preprocess
 
 The data was then preprocessed and all k-mers with occurrences below a certain threshold were disregarded. (Thresholds
-were based on the file size and follow the recommendation of Salmon et al.)
-
-```
-# REINDEER
-
-# Needle
-
-```
-
-## Build
-
-## Query
-
-# Speed and space consumption
-
-For the space and speed consumption a data set of 1,742 RNA seq files was used. Please, download those files for the analysis.
-The SRA codes of all these files can be found in: `data/large_dataset.lst`.
-
-Before the actual analyses can be run, a preprocess step is necessary. Please, adjust the paths in `preprocess.sh` and `preprocess_reindeer.sh`
-and then run them via bash.
+were based on the file size and follow the recommendation of Salmon et al.) The preprocess can be done by running the
+scripts `preprocess.sh` and `preprocess_reindeer.sh`.  (Please adjust the paths beforehand.)
 
 ```
 bash preprocess.sh
 preprocess_reindeer.sh
+
 ```
+
+## Build & Query
 
 Then adjust the paths in `run_large_dataset.sh` and run:
 
