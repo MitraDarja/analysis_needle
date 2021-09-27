@@ -1,4 +1,8 @@
-This is the analysis of the tool Needle (https://github.com/MitraDarja/needle).
+This is the analysis of the tool Needle (https://github.com/seqan/needle).
+
+# Preparations
+
+Set needle with an alias: alias needle=$Path_to_needle_build_dir$/bin/needle
 
 # Accuracy Analysis
 
@@ -141,3 +145,24 @@ were based on the file size and follow the recommendation of Salmon et al.)
 ## Build
 
 ## Query
+
+# Speed and space consumption
+
+For the space and speed consumption a data set of 1,742 RNA seq files was used. Please, download those files for the analysis.
+The SRA codes of all these files can be found in: `data/large_dataset.lst`.
+
+Before the actual analyses can be run, a preprocess step is necessary. Please, adjust the paths in `preprocess.sh` and `preprocess_reindeer.sh`
+and then run them via bash.
+
+```
+bash preprocess.sh
+preprocess_reindeer.sh
+```
+
+Then adjust the paths in `run_large_dataset.sh` and run:
+
+```
+bash run_large_dataset.sh
+```
+
+In the folders w_21, w_25, w_41 and reindeer the indexes and their measurement of `/usr/bin/time -v` for the construction and the queries can be found.
