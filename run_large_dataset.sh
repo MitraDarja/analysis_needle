@@ -69,6 +69,6 @@ reindeer="Path to reindeer executable"
 /usr/bin/time -v $needle estimate -i w_21/SRR_FPR03_Compressed data/query_1000.fa -o  w_21/expressions_SRR_FPR03_Compressed_1000.out &> w_21/Time_FPR03_Compressed_Query_1000.txt
 
 
-/usr/bin/time -v ./Reindeer --query -l reindeer/out_large_thread4 -q data/query_1.fa &> reindeer/Time_Query_1.txt
-/usr/bin/time -v ./Reindeer --query -l reindeer/out_large_thread4 -q data/query_100.fa &> reindeer/Time_Query_100.txt
-/usr/bin/time -v ./Reindeer --query -l reindeer/out_large_thread4 -q data/query_1000.fa &> reindeer/Time_Query_1000.txt
+/usr/bin/time -v ./Reindeer --query -l reindeer/out_large_thread4 -o reindeer/Query_1_ -q data/query_1.fa &> reindeer/Time_Query_1.txt
+/usr/bin/time -v ./Reindeer --query -l reindeer/out_large_thread4 -o reindeer/Query_100_ -q data/query_100.fa &> reindeer/Time_Query_100.txt
+/usr/bin/time -v ./Reindeer --query -l reindeer/out_large_thread4 -o reindeer/Query_1000_ -q data/query_1000.fa &> reindeer/Time_Query_1000.txt

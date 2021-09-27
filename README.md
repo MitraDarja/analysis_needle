@@ -1,37 +1,36 @@
 This is the analysis of the tool Needle (https://github.com/seqan/needle).
 
-# Preparations
-
-Set needle with an alias: alias needle=$Path_to_needle_build_dir$/bin/needle
-
 # Accuracy Analysis
 
 The purpose of this analysis is to determine the accuracy of needle. In this analysis Needle is compared with the
-state-of-the-art tools kallisto and salmon. Moreover, `needle count` is used for a comparison, to check the validity
-of determining the expression value of a gene by taking the median of the count values of a transcript's minimizers
-(if a gene consits of multiple transcripts the mean of all expression values is taken) without having to account for
-errors arising from the probabilistic and approximative structure of Needle (namely the probabilistic data structure of
-the interleaved bloom filters and the approximation following the expression levels).
-Moreover, REINDEER as a direct competitor of needle was used for the comparison.
+state-of-the-art tools kallisto and salmon as well as Reindeer.
 
 ## Data
 Two data sets were used, one simulated and one real data set. The simulated data set can be created by using the provided Rscript `simulate.R`.
+Run:
+```
+Rscript simulate.R data/100.fa
+```
+
 The real data set is from the SEQC studies, more precisely, the data provided by Chinsanga et al. (https://github.com/ShiLab-Bioinformatics/GeneAnnotation) was analysed. In order to repeat the analysis, please download this data.
 
 ## Analysis Preparations
 
-Please, download and install the tools: kallisto(https://github.com/pachterlab/kallisto), salmon(https://github.com/COMBINE-lab/salmon), REINDEER(https://github.com/kamimrcht/REINDEER) and Needle (https://github.com/seqan/needle).
+Please, download and install the tools: kallisto(https://github.com/pachterlab/kallisto) (v0.46.2), salmon(https://github.com/COMBINE-lab/salmon)(v1.5.1), REINDEER(https://github.com/kamimrcht/REINDEER)(v1.0.2) and Needle (https://github.com/seqan/needle)(v1.0.0).
 Then run the following commands.
 
 ### kallisto
 
 ```
+# Run to create the index of the transcriptome for the simulated data
+kallisto index -i 100.index -k 19  analysis_needle/data/100.fa
+
+# Run for every input experiment of the simulated data set, i goes from 1 to 256
+kallisto quant -i 100.index -o Test-${i}/ analysis_needle/data/Test_${i}/sample_01_1.fasta.gz analysis_needle/data/Test_${i}/sample_01_2.fasta.gz
+kallisto quant -i 100.index -o Test-${i}_2/ analysis_needle/data/Test_${i}/sample_02_1.fasta.gz analysis_needle/data/Test_${i}/sample_02_2.fasta.gz
+
 # Run to create the index of the transcriptome
 kallisto index -i gencode.v36.index -k 19  analysis_needle/data/gencode.v36.pc_transcripts.fa.gz
-
-# Run for every input experiment of the simulated data set, i goes from 1 to 20
-kallisto quant -i gencode.v36.index -o Test-${i}/ analysis_needle/data/Test_${i}/sample_01_1.fasta.gz analysis_needle/data/Test_${i}/sample_01_2.fasta.gz
-kallisto quant -i gencode.v36.index -o Test-${i}_2/ analysis_needle/data/Test_${i}/sample_02_1.fasta.gz analysis_needle/data/Test_${i}/sample_02_2.fasta.gz
 
 # Run for every input experiment of the real data set, letter of ["A", "B", "C", "D"] and number of [1, 2, 3, 4]
 kallisto quant -i gencode.v36.index -o SEQC2012-ILM-AGR-${letter}-${number}/ SEQC2012-ILM-AGR-${letter}-${i}_R1.fastq.gz SEQC2012-ILM-AGR${letter}-${number}_R2.fastq.gz
@@ -40,13 +39,15 @@ kallisto quant -i gencode.v36.index -o SEQC2012-ILM-AGR-${letter}-${number}/ SEQ
 ### salmon
 
 ```
+# Run to create the index of the transcriptome for the simulated data
+salmon index -t analysis_needle/data/100.fa -i 100.index -k 19
+
+# Run for every input experiment of the simulated data set, i goes from 1 to 256
+salmon quant -i 100/ -l ISF -1 analysis_needle/data/Test_${i}/sample_01_1.fasta.gz -2 analysis_needle/data/Test_${i}/sample_01_2.fasta.gz  -o Test_${i}.out
+salmon quant -i 100/ -l ISF -1 analysis_needle/data/Test_${i}/sample_02_1.fasta.gz -2 analysis_needle/data/Test_${i}/sample_02_2.fasta.gz  -o Test_${i}_2.out
+
 # Run to create the index of the transcriptome
 salmon index -t analysis_needle/data/gencode.v36.pc_transcripts.fa.gz -i gencode.v36.index -k 19
-
-# Run for every input experiment of the simulated data set, i goes from 1 to 20
-salmon quant -i gencode.v36.index/ -l ISF -1 analysis_needle/data/Test_${i}/sample_01_1.fasta.gz -2 analysis_needle/data/Test_${i}/sample_01_2.fasta.gz  -o Test_${i}.out
-salmon quant -i gencode.v36.index/ -l ISF -1 analysis_needle/data/Test_${i}/sample_02_1.fasta.gz -2 analysis_needle/data/Test_${i}/sample_02_2.fasta.gz  -o Test_${i}_2.out
-
 
 # Run for every input experiment of the real data set, letter of ["A", "B", "C", "D"] and number of [1, 2, 3, 4]
 salmon quant -i gencode.v36.index/ -l ISF -1 SEQC2012-ILM-AGR-${letter}-${number}_R1.fastq.gz -2 SEQC2012-ILM-AGR-${letter}-${number}_R2.fastq.gz -o out/SEQC2012-ILM-AGR-${letter}-${number}.out
@@ -54,10 +55,31 @@ salmon quant -i gencode.v36.index/ -l ISF -1 SEQC2012-ILM-AGR-${letter}-${number
 
 ### REINDEER
 
-### Needle count
-
 ```
-needle count -k 19 -w 19 --paired -g analysis_needle/data/gencode.v36.pc_transcripts.fa.gz  $(ls -v SEQC2012-ILM-AGR-*fastq.gz)
+# Run bcalm as preprocess,  i goes from 1 to 256
+bcalm -out Test_${i}/sample_01_ -in analysis_needle/data/Test_${i}/sample_01*.fasta.gz -in analysis_needle/data/Test_${i}/sample_01*.fasta.gz  -kmer-size 19 -out-dir bcalm2 -out-tmp bcalm2 -nb-cores 32
+bcalm -out Test_${i}/sample_01_ -in analysis_needle/data/Test_${i}/sample_02*.fasta.gz -in analysis_needle/data/Test_${i}/sample_02*.fasta.gz  -kmer-size  19 -out-dir bcalm2 -out-tmp bcalm2 -nb-cores 32
+
+# Construct index, fof_simulated.lst is a file containing all files created by bcalm
+reindeer --index -f reindeer/fof_simulated.lst -k 19 -o reindeer/out_simulated
+
+# Query
+./Reindeer --query -l reindeer/out_simulated -q data/100.fa -o reindeer/simulated_query
+
+# Transform Reindeer's output
+python3 reindeer_estimate.py reindeer/simulated_query/[PATH to query file] data/100.fa reindeer/simulated.out
+
+# Run bcalm as preprocess for every input experiment of the real data set, letter of ["A", "B", "C", "D"] and number of [1, 2, 3, 4]
+bcalm -in SEQC2012-ILM-AGR-${letter}-${i}_R1.fastq.gz -in SEQC2012-ILM-AGR-${letter}-${i}_R2.fastq.gz -kmer-size 19 -abundance-min 13 -out-dir bcalm2 -out-tmp bcalm2 -nb-cores 32
+
+# Construct index, fof_seqc.lst is a file containing all files created by bcalm
+reindeer --index -f reindeer/fof_seqc.lst -k 19 -o reindeer/out_seqc
+
+# Query
+./Reindeer --query -l reindeer/out_seqc -q data/gencode.v36.pc_transcripts.fa.gz -o reindeer/seqc_query
+
+# Transform Reindeer's output
+python3 reindeer_estimate.py reindeer/seqc_query/[PATH to query file] data/gencode.v36.pc_transcripts.fa.gz reindeer/seqc.out
 ```
 
 ### Needle estimate

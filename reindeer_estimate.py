@@ -10,18 +10,27 @@ genes = {}
 with open(fasta_file, 'r') as f:
     for line in f:
         if (line[0] == ">"):
-            genes.update({line.split('|')[0] : line[:-1]})
-
+            if ('|' in line):
+                genes.update({line.split('|')[0] : line[:-1]})
+            else:
+                genes.update({line.split()[1] : line[:-1]})
 with open(reindeer_file, 'r') as f:
     with open(out_file, 'w') as o:
         # One line gives the result for every dataset
         for line in f:
             estimations = []
-            transcript_name = line.split('|')[0]
+
+            if ('|' in line):
+                transcript_name = line.split('|')[0]
+            else:
+                transcript_name = line.split()[1]
             if transcript_name in genes:
                 # Each dataset result is divided by a ' ', so results contains all results for all datasets.
                 # First entry in a line is the gene, so can be ignored.
-                results = line.split()[1:]
+                if ('|' in line):
+                    results = line.split()[1:]
+                else:
+                    results = line.split()[2:]
                 for res in results:
                     kmers_occ = [] # store the occurrences of the k-mers
                     # * means not found
@@ -32,7 +41,7 @@ with open(reindeer_file, 'r') as f:
                              occurrences = []
                              # Entry looks like X-Y:Z is, where X and are the position of the k-mers and Z the count value
                              # kmers = Y-X, so number of k-mers with that count value
-                             kmers = int(counts.split(':')[0].split('-')[1]) - int(counts.split(':')[0].split('-')[0])
+                             kmers = int(counts.split(':')[0].split('-')[1]) - (int(counts.split(':')[0].split('-')[0]) + 1)
                              occ = 0
                              # occ_s is the occurence (Z above), can be * if not found
                              occ_s = counts.split(':')[1]
