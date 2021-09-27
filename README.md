@@ -16,7 +16,7 @@ The real data set is from the SEQC studies, more precisely, the data provided by
 
 ## Analysis Preparations
 
-Please, download and install the tools: [kallisto](https://github.com/pachterlab/kallisto) (v0.46.2), [salmon](https://github.com/COMBINE-lab/salmon)(v1.5.1), [REINDEER](https://github.com/kamimrcht/REINDEER)(v1.0.2) and [Needle] (https://github.com/seqan/needle)(v1.0.0).
+Please, download and install the tools: [kallisto](https://github.com/pachterlab/kallisto) (v0.46.2), [salmon](https://github.com/COMBINE-lab/salmon)(v1.5.1), [REINDEER](https://github.com/kamimrcht/REINDEER)(v1.0.2) and [Needle](https://github.com/seqan/needle)(v1.0.0).
 Then run the following commands.
 
 ### kallisto
