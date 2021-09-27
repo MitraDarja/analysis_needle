@@ -15,15 +15,15 @@ fastapath = args[1]
 fastafile = system.file('extdata', fastapath, package='polyester')
 fasta = readDNAStringSet(fastapath)
 
-trials = 100
-coverage = 5
+trials = 256
+coverage = 20
 bp_length = 75
 howManyGenes = 0.1 * length(fasta) # 10 % of transcripts are differently expressed
 for (j in (1:trials)) {
   out = c()
   # Pick randomly transcripts, which should be differently expressed and then add randomly a fold change value to them
   whichGenes = sample(1:length(fasta),howManyGenes)
-  amount = sample(c(0.33,0.5,2,3),howManyGenes,replace = TRUE) # Fold change randomly picked
+  amount = sample(c(0.25,0.5,2,4),howManyGenes,replace = TRUE) # Fold change randomly picked
   fold_changes = matrix(c(rep(1,length(fasta)),rep(1,length(fasta))), nrow=length(fasta))
 
   for(i in (1:howManyGenes)){
@@ -43,8 +43,9 @@ for (j in (1:trials)) {
 
   fasta = readDNAStringSet(fastapath)
   print(j)
-  if ((j%%10) == 0)
+  print(coverage)
+  if ((j%%64) == 0)
   {
-    coverage = coverage + 5
+    coverage = coverage + 20
   }
 }

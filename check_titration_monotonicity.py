@@ -62,7 +62,7 @@ else:
     with open(sys.argv[3], 'r') as f:
         for line in f:
             gene = line.split()[0].split('|')[5]
-            exp_list = [int(x) for x in line.split()[1:]]
+            exp_list = [float(x) for x in line.split()[1:]]
 
             if gene not in values:
                 dict = {"A": [exp_list[0:4]], "B": [exp_list[4:8]], "C": [exp_list[8:12]],"D": [exp_list[12:16]] }
@@ -76,7 +76,7 @@ else:
 
 # Normalization, a normalization should be performed because different experiments are compared to each other
 norm_all = {}
-if (method == 0) | (method == 3):
+if (method == 0): #| (method == 3):
     norm_all.update({"A":[0,0,0,0], "B":[0,0,0,0], "C":[0,0,0,0], "D":[0,0,0,0]})
     for it in range(4):
         if (method == 0):
@@ -121,7 +121,11 @@ for it in range(4):
             expected_fold_change_c_d = np.log2(1+float(gene_expressions[0] + (3*gene_expressions[3]))/((gene_expressions[3] + 1 + (3*gene_expressions[0])))) # A+3B/3A+B = B/A
             fold_change_a_b = np.log2(1+float(gene_expressions[3])/(gene_expressions[0]+1))
             fold_change_c_d = np.log2(1+float(gene_expressions[2])/(gene_expressions[1]+1))
+            #print(gene_expressions)
             error.append((expected_fold_change_c_d-fold_change_c_d)* (expected_fold_change_c_d-fold_change_c_d))
-
+            #if not (np.isnan((expected_fold_change_c_d-fold_change_c_d)* (expected_fold_change_c_d-fold_change_c_d))):
+            #    error.append((expected_fold_change_c_d-fold_change_c_d)* (expected_fold_change_c_d-fold_change_c_d))
+                #print(gene_expressions, gene, expected_fold_change_c_d, fold_change_a_b, fold_change_c_d)
 print(gene_count)
 print(np.mean(error), np.var(error), len(error))
+#print(error)

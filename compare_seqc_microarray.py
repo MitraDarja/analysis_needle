@@ -49,7 +49,7 @@ def read_needle_estimate(estimate_file, estimate):
     with open(estimate_file, "r") as f:
         for line in f:
             gene = line.split()[0].split('|')[5]
-            exp_list = [int(x) for x in line.split()[1:]]
+            exp_list = [float(x) for x in line.split()[1:]]
             if gene in estimate:
                 estimate[gene].append(exp_list)
             else:
@@ -156,7 +156,7 @@ for f in range(num_files):
     else:
         spearman.append(0)
 
-    print (miss, len(seqc), len(expressions))
+    #print (miss, len(seqc), len(expressions))
     miss = 0
     iterator += 1
     it += 1
@@ -167,9 +167,9 @@ for f in range(num_files):
 
 
 
-print(pearson)
+#print(pearson)
 print(np.mean(pearson), np.var(pearson))
-print(spearman)
+#print(spearman)
 print(np.mean(spearman), np.var(spearman))
 
 spearman_means = []
