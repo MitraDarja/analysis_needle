@@ -15,6 +15,8 @@ needle="Path to Needle executable"
 
 /usr/bin/time -v $needle ibfmin -l 15 -f 0.05 w_21/SRR*minimiser -o w_21/SRR_ &> w_21/SRR_Time.txt
 /usr/bin/time -v $needle ibfmin -l 15 -f 0.05 w_21/SRR*minimiser -o w_21/SRR_Compressed -c &> w_21/SRR_Compressed_Time.txt
+/usr/bin/time -v $needle ibfmin -l 15 -f 0.05 w_21/SRR*minimiser -o w_21/SRR_Thread4_ -t 4 &> w_21/SRR_Thread4_Time.txt
+/usr/bin/time -v $needle ibfmin -l 15 -f 0.05 w_21/SRR*minimiser -o w_21/SRR_Thread4_Compressed -t 4 &> w_21/SRR_Thread4_Compressed_Time.txt
 /usr/bin/time -v $needle ibfmin -l 15 -f 0.3 w_21/SRR*minimiser -o w_21/SRR_FPR03_ &> w_21/SRR_FPR03_Time.txt
 /usr/bin/time -v $needle ibfmin -l 15 -f 0.3 w_21/SRR*minimiser -o w_21/SRR_FPR03_Compressed -c &> w_21/SRR_FPR03_Compressed_Time.txt
 
