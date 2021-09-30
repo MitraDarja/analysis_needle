@@ -12,11 +12,11 @@ Run:
 Rscript simulate.R data/100.fa
 ```
 
-The real data set is from the SEQC studies, more precisely, the data provided by [Chinsanga et al.](https://github.com/ShiLab-Bioinformatics/GeneAnnotation) was analysed. In order to repeat the analysis, please download this data.
+The real data set is from the SEQC studies, more precisely, the data provided by Chinsanga et al. (https://github.com/ShiLab-Bioinformatics/GeneAnnotation) was analysed. In order to repeat the analysis, please download this data.
 
 ## Analysis Preparations
 
-Please, download and install the tools: [kallisto](https://github.com/pachterlab/kallisto) (v0.46.2), [salmon](https://github.com/COMBINE-lab/salmon) (v1.5.1), [REINDEER](https://github.com/kamimrcht/REINDEER) (v1.0.2) and [Needle](https://github.com/seqan/needle) (v1.0.0).
+Please, download and install the tools: [kallisto](https://github.com/pachterlab/kallisto) (v0.46.2), [salmon](https://github.com/COMBINE-lab/salmon)(v1.5.1), [REINDEER](https://github.com/kamimrcht/REINDEER)(v1.0.2) and [Needle] (https://github.com/seqan/needle)(v1.0.0).
 Then run the following commands.
 
 ### kallisto
@@ -176,4 +176,4 @@ Then adjust the paths in `run_large_dataset.sh` and run:
 bash run_large_dataset.sh
 ```
 
-In the folders w_21, w_25, w_41 and reindeer the indexes and their measurement of `/usr/bin/time -v` for the construction and the queries can be found.
+In the folders w_21, w_25, w_41 and reindeer the indexes and their measurement of `/usr/bin/time -v` for the construction and the queries can be found. With the python script `summary_largedata.py` a result file can be obtained that summarizes the times, ram usages and sizes of the build and the query.
