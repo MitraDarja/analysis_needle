@@ -1,3 +1,10 @@
+# Use:
+# Use:
+# python3 compare_simulated_cov.py [X] data/ 512 [DATA]
+# [X] presents the method to analysis. 1 stands for kallisto, 2 for salmon and 3 for needle estimate or REINDEER.
+# [DATA] stands for the output data of the commands in section Analysis Preparations (please input the data in order,
+# you can use the bash command ls -v).
+
 import numpy as np
 import sys
 from scipy import stats
