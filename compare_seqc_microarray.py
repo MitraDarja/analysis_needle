@@ -1,12 +1,13 @@
 # Use:
-# seqc: python3 compare_seqc_microarray.py method(0, 1, 2 for needle count, kallisto or salmon) 0 secq_expression num_files data
-# needle: python3 compare_seqc_microarray.py 0 0 ../Chisanga_data/Taqman-raw.txt 16 ../needle/build/Chisanga_data2/SEQC2012-ILM-AGR-*.out
-# kallisto: python3 compare_seqc_microarray.py 1 0 ../Chisanga_data/Taqman-raw.txt 16 ../kallisto/SEQC2012-ILM-AGR-*/abundance.tsv
-# salmon: python3 compare_seqc_microarray.py 2 0 ../Chisanga_data/Taqman-raw.txt 16 ../salmon-1.4.0/build/out/SEQC2012-ILM-AGR-*-*.out/quant.sf
+# Taqman
+# python3 compare_seqc_microarray.py [X] 0 data/Taqman-raw.txt 16 [DATA]
 
-# microrray: python3 compare_seqc_microarray.py method(0, 1, 2 for needle count, kallisto or salmon) 1 secq_expression file with entred2gene_id_info num_files data
-# kallisto: python3 compare_seqc_microarray.py 1 1 ../Chisanga_data/BeadChip-Log2.table data/entrez_id2gene_id.txt 16 ../kallisto/SEQC2012-ILM-AGR-*/abundance.tsv
-# salmon: python3 compare_seqc_microarray.py 2 1 ../Chisanga_data/BeadChip-Log2.table data/entrez_id2gene_id.txt 16 ../salmon-1.4.0/build/out/SEQC2012-ILM-AGR-*-*.out/quant.sf
+# Microarray
+# python3 compare_seqc_microarray.py [X] 1 data/BeadChip-Log2.table data/entrez_id2gene_id.txt 16 [DATA]
+
+# [X] presents the method to analysis. 1 stands for kallisto, 2 for salmon and 3 for needle estimate or REINDEER.
+# [DATA] stands for the output data of the commands in section Analysis Preparations
+# (please input the data in order, you can use the bash command ls -v).]
 
 import numpy as np
 import sys
@@ -87,7 +88,6 @@ gene_ids = {}
 if microrray:
     with open(seqc_file2, 'r') as f:
         for line in f:
-            #print(line)
             if line[0] != "q":
                 line_table = line.split()
                 gene = line_table[1]
@@ -156,7 +156,6 @@ for f in range(num_files):
     else:
         spearman.append(0)
 
-    #print (miss, len(seqc), len(expressions))
     miss = 0
     iterator += 1
     it += 1
@@ -165,18 +164,5 @@ for f in range(num_files):
         Letters = Letters[1:]
         it = 0
 
-
-
-#print(pearson)
-print(np.mean(pearson), np.var(pearson))
-#print(spearman)
+#print(np.mean(pearson), np.var(pearson))
 print(np.mean(spearman), np.var(spearman))
-
-spearman_means = []
-spearman = np.array(spearman)
-before = 0
-for i in range(4,20,4):
-    spearman_means.append(np.mean(spearman[before:i]))
-    before = i
-print(spearman_means)
-print(np.mean(spearman_means), np.var(spearman_means))
