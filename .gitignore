@@ -9,4 +9,6 @@ kallisto/
 salmon/
 data/Test_*
 
+Boxplot.png
+Boxplot_Cov.png
 Results_Large_Data_set.txt
