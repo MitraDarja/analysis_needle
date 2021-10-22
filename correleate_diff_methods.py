@@ -1,6 +1,7 @@
 # Calculates the pearson and spearman correlation between two experiments.
 # Usage: python3 correlation_diff_methods.py method_1 method_2 num_files files_method_1 files_method_2
 
+import math
 import numpy as np
 import sys
 from scipy import stats
@@ -74,6 +75,10 @@ else:
 pearson = []
 spearman = []
 miss = 0
+nan=0
+nan_list = []
+nan2=0
+nan_list2 = []
 for i in range(num_files):
     if (method_1 != 3):
         method1_values = {}
@@ -93,19 +98,34 @@ for i in range(num_files):
         else:
             miss += 1
 
-    if (stats.pearsonr(method_1_exps, method_2_exps)[1] <= 0.003):
+    if (stats.pearsonr(method_1_exps, method_2_exps)[1] <= (0.05/num_files))  :
         pearson.append(stats.pearsonr(method_1_exps, method_2_exps)[0] )
     else:
         pearson.append(0)
-    if (stats.spearmanr(method_1_exps, method_2_exps)[1] <= 0.003):
+    if (stats.spearmanr(method_1_exps, method_2_exps)[1] <= (0.05/num_files)):
         spearman.append(stats.spearmanr(method_1_exps, method_2_exps)[0] )
     else:
         spearman.append(0)
 
-    print (miss, len(method_1_exps), len(method_2_exps))
+    #print (miss, len(method_1_exps), len(method_2_exps), stats.spearmanr(method_1_exps, method_2_exps))
     miss = 0
+    if (math.isnan(stats.pearsonr(method_1_exps, method_2_exps)[0] )):
+        nan +=1
+        nan_list.append(i)
+        pearson = pearson[:-1]
+    if (math.isnan(stats.spearmanr(method_1_exps, method_2_exps)[0] )):
+        nan2 +=1
+        nan_list2.append(i)
+        spearman = spearman[:-1]
 
-print(pearson)
-print(np.mean(pearson), np.var(pearson))
-print(spearman)
-print(np.mean(spearman), np.var(spearman))
+    #if (i==18):
+    #    print(method_1_exps, method_2_exps)
+
+#print(pearson)
+pearson2 =  [x for x in pearson if math.isnan(x) == False]
+print(np.mean(pearson2), np.var(pearson2), len(pearson2))
+#print(spearman)
+spearman2 =  [x for x in spearman if math.isnan(x) == False]
+print(np.mean(spearman2), np.var(spearman2), len(spearman2))
+print(nan)
+print(nan_list)

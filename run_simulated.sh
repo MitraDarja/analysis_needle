@@ -41,14 +41,24 @@ $reindeer --query -l reindeer/out_simulated -q data/100.fa -o reindeer/simulated
 python3 reindeer_estimate.py reindeer/simulated_query/query_results/out_query_Reindeer_P40_100_0.out data/100.fa reindeer/expressions_simulated.out
 
 # Create Needle index
-$needle ibfmin -o w_19/Simulated_ $(ls -v w_19/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320  -f 0.05
-$needle ibfmin -o w_23/Simulated_ $(ls -v w_23/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320  -f 0.05
-$needle ibfmin -o w_39/Simulated_ $(ls -v w_39/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320  -f 0.05
+$needle ibfmin -o w_19/Simulated_ $(ls -v w_19/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 400 -e 460 -e 520 -f 0.05
+$needle ibfmin -o w_23/Simulated_ $(ls -v w_23/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 460 -e 520  -f 0.05
+$needle ibfmin -o w_39/Simulated_ $(ls -v w_39/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 460 -e 520  -f 0.05
 
 # Query Needle index
 $needle estimate -i w_19/Simulated_ data/100.fa  -o  w_19/expressions_simulated.out
 $needle estimate -i w_23/Simulated_ data/100.fa  -o  w_23/expressions_simulated.out
 $needle estimate -i w_39/Simulated_ data/100.fa  -o  w_39/expressions_simulated.out
+
+# Create Needle index for FPR = 0.3
+$needle ibfmin -o w_19/Simulated_FPR03 $(ls -v w_19/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 400 -e 460 -e 520 -f 0.3
+$needle ibfmin -o w_23/Simulated_FPR03 $(ls -v w_23/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 460 -e 520  -f 0.3
+$needle ibfmin -o w_39/Simulated_FPR03 $(ls -v w_39/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 460 -e 520  -f 0.3
+
+# Query Needle index for FPR = 0.3
+$needle estimate -i w_19/Simulated_FPR03 data/100.fa  -o  w_19/expressions_simulated_fpr03.out
+$needle estimate -i w_23/Simulated_FPR03 data/100.fa  -o  w_23/expressions_simulated_fpr03.out
+$needle estimate -i w_39/Simulated_FPR03 data/100.fa  -o  w_39/expressions_simulated_fpr03.out
 
 # Evaluation
 
@@ -56,6 +66,29 @@ python3 compare_simulated.py 1 data/ 512 $(ls -v kallisto/Test-*/abundance.tsv)
 python3 compare_simulated.py 2 data/ 512 $(ls -v salmon/Test_*.out/quant.sf)
 python3 compare_simulated.py 3 data/ 512 reindeer/expressions_simulated.out
 mv Needle_Reindeer_DE.npy Reindeer.npy
+python3 compare_simulated.py 3 data/ 512 w_19/expressions_simulated_fpr03.out
+mv Needle_Reindeer_DE.npy Needle_19.npy
+python3 compare_simulated.py 3 data/ 512 w_23/expressions_simulated_fpr03.out
+mv Needle_Reindeer_DE.npy Needle_23.npy
+python3 compare_simulated.py 3 data/ 512 w_39/expressions_simulated_fpr03.out
+mv Needle_Reindeer_DE.npy Needle_39.npy
+
+python3 compare_simulated_cov.py 1 data/ 512 $(ls -v kallisto/Test-*/abundance.tsv)
+python3 compare_simulated_cov.py 2 data/ 512 $(ls -v salmon/Test_*.out/quant.sf)
+python3 compare_simulated_cov.py 3 data/ 512 reindeer/expressions_simulated.out
+mv Needle_Reindeer_Cov.npy Reindeer_Cov.npy
+python3 compare_simulated_cov.py 3 data/ 512 w_19/expressions_simulated_fpr03.out
+mv Needle_Reindeer_Cov.npy Needle_19_Cov.npy
+python3 compare_simulated_cov.py 3 data/ 512 w_23/expressions_simulated_fpr03.out
+mv Needle_Reindeer_Cov.npy Needle_23_Cov.npy
+python3 compare_simulated_cov.py 3 data/ 512 w_39/expressions_simulated_fpr03.out
+mv Needle_Reindeer_Cov.npy Needle_39_Cov.npy
+
+python3 boxplot.py
+
+mv Boxplot.png Boxplot_03.png
+mv Boxplot_Cov.png Boxplot_Cov_03.png
+
 python3 compare_simulated.py 3 data/ 512 w_19/expressions_simulated.out
 mv Needle_Reindeer_DE.npy Needle_19.npy
 python3 compare_simulated.py 3 data/ 512 w_23/expressions_simulated.out
@@ -67,6 +100,13 @@ python3 compare_simulated_cov.py 1 data/ 512 $(ls -v kallisto/Test-*/abundance.t
 python3 compare_simulated_cov.py 2 data/ 512 $(ls -v salmon/Test_*.out/quant.sf)
 python3 compare_simulated_cov.py 3 data/ 512 reindeer/expressions_simulated.out
 mv Needle_Reindeer_Cov.npy Reindeer_Cov.npy
+python3 compare_simulated_cov.py 3 data/ 512 w_19/expressions_simulated.out
+mv Needle_Reindeer_Cov.npy Needle_19_Cov.npy
+python3 compare_simulated_cov.py 3 data/ 512 w_23/expressions_simulated.out
+mv Needle_Reindeer_Cov.npy Needle_23_Cov.npy
+python3 compare_simulated_cov.py 3 data/ 512 w_39/expressions_simulated.out
+mv Needle_Reindeer_Cov.npy Needle_39_Cov.npy
+
 python3 compare_simulated_cov.py 3 data/ 512 w_19/expressions_simulated.out
 mv Needle_Reindeer_Cov.npy Needle_19_Cov.npy
 python3 compare_simulated_cov.py 3 data/ 512 w_23/expressions_simulated.out

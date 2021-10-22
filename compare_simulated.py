@@ -148,7 +148,7 @@ for i in range(0, num_files, 2):
                         max_fc = expected_values[transcript]
                         max_1 = values[transcript][i]
                         max_2 = values[transcript][i+1]
-                        max_step = int(i/steps)
+                        max_step = i #int(i/steps)
                 elif ((values[transcript][i+1] == 0) & (values[transcript][i] == 0)):
                     fold_change =1
                     mse2[int(i/steps)][fc].append(fold_change)

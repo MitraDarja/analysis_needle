@@ -8,6 +8,8 @@ kallisto = np.array(np.load("Kallisto_DE.npy",  allow_pickle=True))
 salmon = np.array(np.load("Salmon_DE.npy",  allow_pickle=True))
 reindeer = np.array(np.load("Reindeer.npy",  allow_pickle=True))
 
+print(max(np.concatenate(Needle_19[:,3])))
+
 kallisto = [np.concatenate(kallisto[:,0]), np.concatenate(kallisto[:,1]),  np.concatenate(kallisto[:,4]), np.concatenate(kallisto[:,2]), np.concatenate(kallisto[:,3])]
 salmon = [np.concatenate(salmon[:,0]), np.concatenate(salmon[:,1]),  np.concatenate(salmon[:,4]), np.concatenate(salmon[:,2]), np.concatenate(salmon[:,3])]
 Needle_19 = [np.concatenate(Needle_19[:,0]), np.concatenate(Needle_19[:,1]),  np.concatenate(Needle_19[:,4]), np.concatenate(Needle_19[:,2]), np.concatenate(Needle_19[:,3])]
@@ -44,9 +46,9 @@ set_box_color(bp3, colors[5])
 plt.plot([], c=colors[0], label='Kallisto')
 plt.plot([], c=colors[1], label='Salmon')
 plt.plot([], c=colors[2], label='Reindeer')
-plt.plot([], c=colors[3], label='Needle')
-plt.plot([], c=colors[4], label='Needle (w=23)')
-plt.plot([], c=colors[5], label='Needle (w=39)')
+plt.plot([], c=colors[3], label='Needle (19, 19)')
+plt.plot([], c=colors[4], label='Needle (23, 19)')
+plt.plot([], c=colors[5], label='Needle (39, 19)')
 plt.legend()
 
 plt.xticks(range(0, len(ticks) * 2, 2), ticks)
@@ -93,9 +95,9 @@ set_box_color(bp3, colors[5])
 plt.plot([], c=colors[0], label='Kallisto')
 plt.plot([], c=colors[1], label='Salmon')
 plt.plot([], c=colors[2], label='Reindeer')
-plt.plot([], c=colors[3], label='Needle')
-plt.plot([], c=colors[4], label='Needle (w=23)')
-plt.plot([], c=colors[5], label='Needle (w=39)')
+plt.plot([], c=colors[3], label='Needle (19, 19)')
+plt.plot([], c=colors[4], label='Needle (23, 19)')
+plt.plot([], c=colors[5], label='Needle (39, 19)')
 plt.legend()
 
 plt.xticks(range(0, len(ticks) * 2, 2), ticks)

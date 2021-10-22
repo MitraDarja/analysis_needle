@@ -8,7 +8,13 @@ reindeer/
 kallisto/
 salmon/
 data/Test_*
+*npy
 
+Results_SEQC_Data_set.txt
+Results_SEQC_Data_set.txt
+Results_Large_Data_set.txt
+Results_Large_Data_set_FPR03.txt
 Boxplot.png
 Boxplot_Cov.png
-Results_Large_Data_set.txt
+Boxplot_03.png
+Boxplot_Cov_03.png
