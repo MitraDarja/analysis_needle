@@ -43,9 +43,9 @@ set_box_color(bp2, colors[4])
 set_box_color(bp3, colors[5])
 
 # draw temporary red and blue lines and use them to create a legend
-plt.plot([], c=colors[0], label='Kallisto')
+plt.plot([], c=colors[0], label='kallisto')
 plt.plot([], c=colors[1], label='Salmon')
-plt.plot([], c=colors[2], label='Reindeer')
+plt.plot([], c=colors[2], label='REINDEER')
 plt.plot([], c=colors[3], label='Needle (19, 19)')
 plt.plot([], c=colors[4], label='Needle (23, 19)')
 plt.plot([], c=colors[5], label='Needle (39, 19)')
@@ -53,7 +53,7 @@ plt.legend()
 
 plt.xticks(range(0, len(ticks) * 2, 2), ticks)
 plt.xlim(-2, len(ticks)*2)
-#plt.ylim(0,6)
+plt.ylim(0,6)
 plt.tight_layout()
 
 plt.savefig('Boxplot.png')
@@ -92,9 +92,9 @@ set_box_color(bp2, colors[4])
 set_box_color(bp3, colors[5])
 
 # draw temporary red and blue lines and use them to create a legend
-plt.plot([], c=colors[0], label='Kallisto')
+plt.plot([], c=colors[0], label='kallisto')
 plt.plot([], c=colors[1], label='Salmon')
-plt.plot([], c=colors[2], label='Reindeer')
+plt.plot([], c=colors[2], label='REINDEER')
 plt.plot([], c=colors[3], label='Needle (19, 19)')
 plt.plot([], c=colors[4], label='Needle (23, 19)')
 plt.plot([], c=colors[5], label='Needle (39, 19)')
