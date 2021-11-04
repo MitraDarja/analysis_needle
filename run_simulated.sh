@@ -42,8 +42,8 @@ python3 reindeer_estimate.py reindeer/simulated_query/query_results/out_query_Re
 
 # Create Needle index
 $needle ibfmin -o w_19/Simulated_ $(ls -v w_19/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 400 -e 460 -e 520 -f 0.05
-$needle ibfmin -o w_23/Simulated_ $(ls -v w_23/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 460 -e 520  -f 0.05
-$needle ibfmin -o w_39/Simulated_ $(ls -v w_39/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 460 -e 520  -f 0.05
+$needle ibfmin -o w_23/Simulated_ $(ls -v w_23/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 400 -e 460 -e 520  -f 0.05
+$needle ibfmin -o w_39/Simulated_ $(ls -v w_39/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 400 -e 460 -e 520  -f 0.05
 
 # Query Needle index
 $needle estimate -i w_19/Simulated_ data/100.fa  -o  w_19/expressions_simulated.out
@@ -52,8 +52,8 @@ $needle estimate -i w_39/Simulated_ data/100.fa  -o  w_39/expressions_simulated.
 
 # Create Needle index for FPR = 0.3
 $needle ibfmin -o w_19/Simulated_FPR03 $(ls -v w_19/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 400 -e 460 -e 520 -f 0.3
-$needle ibfmin -o w_23/Simulated_FPR03 $(ls -v w_23/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 460 -e 520  -f 0.3
-$needle ibfmin -o w_39/Simulated_FPR03 $(ls -v w_39/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 460 -e 520  -f 0.3
+$needle ibfmin -o w_23/Simulated_FPR03 $(ls -v w_23/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 400 -e 460 -e 520  -f 0.3
+$needle ibfmin -o w_39/Simulated_FPR03 $(ls -v w_39/Test_*)  -e 5 -e 10 -e 15 -e 20 -e 30 -e 40 -e 60 -e 80 -e 120 -e 160 -e 240 -e 320 -e 400 -e 460 -e 520  -f 0.3
 
 # Query Needle index for FPR = 0.3
 $needle estimate -i w_19/Simulated_FPR03 data/100.fa  -o  w_19/expressions_simulated_fpr03.out
