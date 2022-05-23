@@ -72,3 +72,4 @@ bash run_large_dataset.sh
 
 In the folders w_21, w_25, w_41 and reindeer the indexes and their measurement of `/usr/bin/time -v` for the construction and the queries can be found.
 A summary of the results can be found in the file `Results_Large_Data_set.txt` containing a summary of the times, ram usages and sizes of the build and the query.
+If you want the same analysis, run the scripts with same names and the `_thread4` extension.
