@@ -73,3 +73,19 @@ bash run_large_dataset.sh
 In the folders w_21, w_25, w_41 and reindeer the indexes and their measurement of `/usr/bin/time -v` for the construction and the queries can be found.
 A summary of the results can be found in the file `Results_Large_Data_set.txt` containing a summary of the times, ram usages and sizes of the build and the query.
 If you want the same analysis, run the scripts with same names and the `_thread4` extension.
+
+# Using quantification for differential gene expression analysis
+
+For this analysis, we need to know the names of the RNA-seq experiments and need to know, which tissue they are from. This information is provided in `sras_1742.lst`, `brain_1742.lst`, `breast_1742.lst` and `blood_1742.lst`.
+Moreover, we need to estimate the expression of all proteincoding genes on a needle index, we picked here one we created under the space and speed analysis.
+
+```
+./needle estimate -i w_41/SRR_ data/gencode.v36.pc_transcripts.fa.gz -o  gencode.out
+```
+
+Then you can run the following command to get all over expressed genes between one type of tissues compared to the other types according to t-test:
+```
+python3 ttest.py gencode.out sras_1742.lst breast_1742.lst blood_1742.lst brain_1742.lst
+```
+
+You can find the genes then in `brain.lst`, `breast.lst` and `blood.lst`, which you can then analyse with ShinyGo or any other gene ontology tool of your choice.
