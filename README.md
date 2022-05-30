@@ -76,16 +76,24 @@ If you want the same analysis, run the scripts with same names and the `_thread4
 
 # Using quantification for differential gene expression analysis
 
-For this analysis, we need to know the names of the RNA-seq experiments and need to know, which tissue they are from. This information is provided in `sras_1742.lst`, `brain_1742.lst`, `breast_1742.lst` and `blood_1742.lst`.
+For this analysis, we need to know the names of the RNA-seq experiments and need to know, which tissue they are from. This information is provided in `data/sras_1742.lst`, `data/brain_1742.lst`, `data/breast_1742.lst` and `data/blood_1742.lst`.
 Moreover, we need to estimate the expression of all proteincoding genes on a needle index, we picked here one we created under the space and speed analysis.
 
 ```
-./needle estimate -i w_41/SRR_ data/gencode.v36.pc_transcripts.fa.gz -o  gencode.out
+./needle estimate -i w_41/SRR_ data/gencode.v36.pc_transcripts.fa.gz -o gencode.out
 ```
 
 Then you can run the following command to get all over expressed genes between one type of tissues compared to the other types according to t-test:
 ```
-python3 ttest.py gencode.out sras_1742.lst breast_1742.lst blood_1742.lst brain_1742.lst
+python3 ttest.py gencode.out data/sras_1742.lst data/breast_1742.lst data/blood_1742.lst data/brain_1742.lst
 ```
 
 You can find the genes then in `brain.lst`, `breast.lst` and `blood.lst`, which you can then analyse with ShinyGo or any other gene ontology tool of your choice.
+
+# Extracting experiments based on quantification
+
+For this analysis, we copied the names of the breast cancer experiments from [REINDEER](https://github.com/kamimrcht/REINDEER/blob/master/reproduce_manuscript_results/data/cancer_dataset) to our repo (`data/cancer_dataset.lst`) and copied the list of experiments and their tissue of origin form [here](https://www.cs.cmu.edu/%7Eckingsf/software/bloomtree/srr-list.txt) to our repo (`data/sras_types.lst`). With this information, we can check how well a distinction based on the quantification of the oncogenes `CCND1`, `ERBB2`,`FOXM1` and `MYC` works by running the following command:
+
+```
+python3 oncogene_analysis.py data/cancer_dataset.lst gencode.out data/sras_1742.lst data/sras_types.lst
+```
