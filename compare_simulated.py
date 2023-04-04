@@ -161,7 +161,9 @@ for m in range(4):
     for m2 in range(5):
         print(m, m2, np.mean(mse2[m][m2]), np.var(mse2[m][m2]), len(mse2[m][m2]))
 
-if (method == 1):
+if (method == 0):
+    out = "Needle_Count_DE"
+elif (method == 1):
     out = "Kallisto_DE"
 elif (method == 2):
     out = "Salmon_DE"
