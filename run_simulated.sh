@@ -72,6 +72,12 @@ python3 compare_simulated.py 3 data/ 512 w_23/expressions_simulated_fpr03.out
 mv Needle_Reindeer_DE.npy Needle_23.npy
 python3 compare_simulated.py 3 data/ 512 w_39/expressions_simulated_fpr03.out
 mv Needle_Reindeer_DE.npy Needle_39.npy
+python3 compare_simulated.py 0 data/ 512 $(ls -v w_19/Test_*_count_*.out)
+mv Needle_Count_DE.npy Needle_Count_19.npy
+python3 compare_simulated.py 0 data/ 512 $(ls -v w_23/Test_*_count_*.out)
+mv Needle_Count_DE.npy Needle_Count_23.npy
+python3 compare_simulated.py 0 data/ 512 $(ls -v w_23/Test_*_count_*.out)
+mv Needle_Count_DE.npy Needle_Count_39.npy
 
 python3 compare_simulated_cov.py 1 data/ 512 $(ls -v kallisto/Test-*/abundance.tsv)
 python3 compare_simulated_cov.py 2 data/ 512 $(ls -v salmon/Test_*.out/quant.sf)
@@ -83,8 +89,16 @@ python3 compare_simulated_cov.py 3 data/ 512 w_23/expressions_simulated_fpr03.ou
 mv Needle_Reindeer_Cov.npy Needle_23_Cov.npy
 python3 compare_simulated_cov.py 3 data/ 512 w_39/expressions_simulated_fpr03.out
 mv Needle_Reindeer_Cov.npy Needle_39_Cov.npy
+python3 compare_simulated_cov.py 0 data/ 512 $(ls -v w_19/Test_*_count_*.out)
+mv Needle_Count_Cov.npy Needle_Count_19_Cov.npy
+python3 compare_simulated_cov.py 0 data/ 512 $(ls -v w_23/Test_*_count_*.out)
+mv Needle_Count_Cov.npy Needle_Count_23_Cov.npy
+python3 compare_simulated_cov.py 0 data/ 512 $(ls -v w_23/Test_*_count_*.out)
+mv Needle_Count_Cov.npy Needle_Count_39_Cov.npy
+
 
 python3 boxplot.py
+python3 boxplot_count.py
 
 mv Boxplot.png Boxplot_03.png
 mv Boxplot_Cov.png Boxplot_Cov_03.png
