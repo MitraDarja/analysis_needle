@@ -1,7 +1,7 @@
 # Use:
 # Use:
 # python3 compare_simulated_cov.py [X] data/ 512 [DATA]
-# [X] presents the method to analysis. 1 stands for kallisto, 2 for salmon and 3 for needle estimate or REINDEER.
+# [X] presents the method to analysis. 0 stands for Needle count, 1 for kallisto, 2 for salmon and 3 for needle estimate or REINDEER.
 # [DATA] stands for the output data of the commands in section Analysis Preparations (please input the data in order,
 # you can use the bash command ls -v).
 
@@ -151,7 +151,9 @@ for i in range(1, 128, 2):
 for r in range(len(results)):
     print(np.mean(results[r]), np.var(results[r]))
 
-if (method == 1):
+if (method == 0):
+    out = "Needle_Count_Cov"
+elif (method == 1):
     out = "Kallisto_Cov"
 elif (method == 2):
     out = "Salmon_Cov"
