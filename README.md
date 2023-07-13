@@ -57,7 +57,7 @@ were based on the file size and follow the recommendation of [Salmon et al.](10.
 scripts `preprocess.sh` and `preprocess_reindeer.sh`.  (Please adjust the paths beforehand.)
 
 ```
-bash preprocess.sh
+bash preprocess.sh data/samples.in
 preprocess_reindeer.sh
 
 ```
