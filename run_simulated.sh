@@ -60,6 +60,16 @@ $needle estimate -i w_19/Simulated_FPR03 data/100.fa  -o  w_19/expressions_simul
 $needle estimate -i w_23/Simulated_FPR03 data/100.fa  -o  w_23/expressions_simulated_fpr03.out
 $needle estimate -i w_39/Simulated_FPR03 data/100.fa  -o  w_39/expressions_simulated_fpr03.out
 
+# Create Needle count
+$needle genome -k 19 -w 19 -o w_19/Simulated.genome.100 data/100.fa
+$needle genome -k 19 -w 23 -o w_23/Simulated.genome.100 data/100.fa
+$needle genome -k 19 -w 39 -o w_39/Simulated.genome.100 data/100.fa
+
+$needle count --genome w_19/Simulated.genome100.genome -k 19 -w 19 --include data/100.fa data/Test_${i}/sample*.fasta.gz -o w_19/Test_${i}_ --paired
+$needle count --genome w_23/Simulated.genome100.genome -k 19 -w 23 --include data/100.fa data/Test_${i}/sample*.fasta.gz -o w_23/Test_${i}_ --paired
+$needle count --genome w_39/Simulated.genome100.genome -k 19 -w 39 --include data/100.fa data/Test_${i}/sample*.fasta.gz -o w_39/Test_${i}_ --paired
+
+
 # Evaluation
 
 python3 compare_simulated.py 1 data/ 512 $(ls -v kallisto/Test-*/abundance.tsv)
