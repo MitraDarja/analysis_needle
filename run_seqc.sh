@@ -44,7 +44,7 @@ gunzip data/gencode.v36.pc_transcripts_k_23.fa.gz
 python3 reindeer_estimate.py reindeer/seqc_query/query_results/out_query_Reindeer_P40_gencode_0.out data/gencode.v36.pc_transcripts_k_23.fa reindeer/expressions_seqc.out
 
 # Create Needle index
-$needle needle ibfmin -o w_19/SEQC_ $(ls -v w_19/SEQC2012-ILM-AGR-*minimiser) -l 15 -f 0.05
+$needle needle ibfmin -o w_19/SEQC_data/gencode.v36.pc_transcripts.fa.gz -l 15 -f 0.05
 $needle needle ibfmin -o w_23/SEQC_ $(ls -v w_23/SEQC2012-ILM-AGR-*minimiser) -l 15 -f 0.05
 $needle needle ibfmin -o w_39/SEQC_ $(ls -v w_39/SEQC2012-ILM-AGR-*minimiser) -l 15 -f 0.05
 
@@ -60,3 +60,12 @@ $needle estimate -i w_39/SEQC_ data/gencode.v36.pc_transcripts.fa.gz  -o  w_39/e
 
 # Evaluation
 python3 summary_seqcdata.py $SEQC_DIR
+
+# Create Needle count
+$needle genome -k 19 -w 19 -o w_19/gencode data/gencode.v36.pc_transcripts.fa.gz
+$needle genome -k 19 -w 23 -o w_23/gencode data/gencode.v36.pc_transcripts.fa.gz
+$needle genome -k 19 -w 39 -o w_39/gencode data/gencode.v36.pc_transcripts.fa.gz
+
+$needle count --genome w_19/gencode.genome -k 19 -w 19 --include data/gencode.v36.pc_transcripts.fa.gz $SEQC_DIR/fqs/SEQC2012-ILM-AGR-*.fastq.gz -o w_19/SEQC_ --paired
+$needle count --genome w_23/gencode.genome -k 19 -w 23 --include data/gencode.v36.pc_transcripts.fa.gz $SEQC_DIR/fqs/SEQC2012-ILM-AGR-*.fastq.gz -o w_23/SEQC_ --paired
+$needle count --genome w_39/gencode.genome -k 19 -w 39 --include data/gencode.v36.pc_transcripts.fa.gz $SEQC_DIR/fqs/SEQC2012-ILM-AGR-*.fastq.gz -o w_39/SEQC_ --paired
