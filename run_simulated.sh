@@ -65,10 +65,11 @@ $needle genome -k 19 -w 19 -o w_19/Simulated.genome.100 data/100.fa
 $needle genome -k 19 -w 23 -o w_23/Simulated.genome.100 data/100.fa
 $needle genome -k 19 -w 39 -o w_39/Simulated.genome.100 data/100.fa
 
-$needle count --genome w_19/Simulated.genome100.genome -k 19 -w 19 --include data/100.fa data/Test_${i}/sample*.fasta.gz -o w_19/Test_${i}_ --paired
-$needle count --genome w_23/Simulated.genome100.genome -k 19 -w 23 --include data/100.fa data/Test_${i}/sample*.fasta.gz -o w_23/Test_${i}_ --paired
-$needle count --genome w_39/Simulated.genome100.genome -k 19 -w 39 --include data/100.fa data/Test_${i}/sample*.fasta.gz -o w_39/Test_${i}_ --paired
-
+for i in {1..256}; do
+    $needle count -k 19 -w 19 --include data/100.fa --genome w_19/Simulated.genome100.genome data/Test_${i}/sample*.fasta.gz -o w_19/Test_${i}_ --paired
+    $needle count -k 19 -w 23 --include data/100.fa --genome w_23/Simulated.genome100.genome data/Test_${i}/sample*.fasta.gz -o w_23/Test_${i}_ --paired
+    $needle count -k 19 -w 39 --include data/100.fa --genome w_39/Simulated.genome100.genome data/Test_${i}/sample*.fasta.gz -o w_39/Test_${i}_ --paired
+done
 
 # Evaluation
 
