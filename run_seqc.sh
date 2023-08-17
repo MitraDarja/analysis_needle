@@ -66,6 +66,6 @@ $needle genome -k 19 -w 19 -o w_19/gencode data/gencode.v36.pc_transcripts.fa.gz
 $needle genome -k 19 -w 23 -o w_23/gencode data/gencode.v36.pc_transcripts.fa.gz
 $needle genome -k 19 -w 39 -o w_39/gencode data/gencode.v36.pc_transcripts.fa.gz
 
-$needle count --genome w_19/gencode.genome -k 19 -w 19 --include data/gencode.v36.pc_transcripts.fa.gz $SEQC_DIR/fqs/SEQC2012-ILM-AGR-*.fastq.gz -o w_19/SEQC_ --paired
-$needle count --genome w_23/gencode.genome -k 19 -w 23 --include data/gencode.v36.pc_transcripts.fa.gz $SEQC_DIR/fqs/SEQC2012-ILM-AGR-*.fastq.gz -o w_23/SEQC_ --paired
-$needle count --genome w_39/gencode.genome -k 19 -w 39 --include data/gencode.v36.pc_transcripts.fa.gz $SEQC_DIR/fqs/SEQC2012-ILM-AGR-*.fastq.gz -o w_39/SEQC_ --paired
+$needle count --genome w_19/gencode.genome -k 19 -w 19 --include data/gencode.v36.pc_transcripts.fa.gz $SEQC_DIR/fqs/SEQC2012-ILM-AGR-*.fastq.gz -o w_19/ --paired
+$needle count --genome w_23/gencode.genome -k 19 -w 23 --include data/gencode.v36.pc_transcripts.fa.gz $SEQC_DIR/fqs/SEQC2012-ILM-AGR-*.fastq.gz -o w_23/ --paired
+$needle count --genome w_39/gencode.genome -k 19 -w 39 --include data/gencode.v36.pc_transcripts.fa.gz $SEQC_DIR/fqs/SEQC2012-ILM-AGR-*.fastq.gz -o w_39/ --paired
